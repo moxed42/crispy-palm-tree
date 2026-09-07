@@ -7,11 +7,17 @@ binding = "DB"
 database_name = "meridian-ops-db"
 database_id = "5b594ec4-5ed2-4b15-a26a-8da85f14c316"
 
-# The static frontend (public/) is deployed separately via Cloudflare Pages,
-# not served by this Worker — this Worker only answers /api/*. No [site]
-# block here on purpose: that would try to serve public/ itself via the
-# legacy Workers Sites mechanism, which needs KV permissions we don't want
-# or need.
+[assets]
+directory = "public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+# The static frontend and the /api/* routes are served from this one
+# Worker (single origin) via the assets binding above, not a separate
+# Pages deployment — this avoids cross-origin cookies, which iOS Safari
+# aggressively blocks in home-screen PWA mode. No [site] block here on
+# purpose: that's the older/legacy Workers Sites mechanism and needs KV
+# permissions we don't want or need.
 
 # Set the PIN as a secret, never in this file:
 #   wrangler secret put PIN

@@ -3,8 +3,10 @@
 A private, mobile-first glow-up tracker. You are the sole crew member aboard
 a long-haul transit vessel; this terminal is how you keep the ship's systems
 (training, fuel, life support) from degrading during the haul. PIN-gated,
-built on Cloudflare (Pages + Workers + D1), designed for a single iPhone
-added to the home screen.
+built on a single Cloudflare Worker (static assets + `/api/*` + D1), designed
+for a single iPhone added to the home screen. Everything is served from one
+origin on purpose — it keeps the PIN session cookie first-party, which
+matters a lot on iOS Safari in home-screen/standalone mode.
 
 ## Systems mapping (Transit Cycle 01)
 - **PROPULSION** — training plan (`programs/week1/week1-strength-plan.md`)
@@ -33,18 +35,15 @@ added to the home screen.
    ```
    wrangler secret put PIN
    ```
-7. **Deploy the Worker:**
+7. **Deploy everything (frontend + API) in one shot:**
    ```
    wrangler deploy
    ```
-8. **Deploy the static frontend to Cloudflare Pages:** either connect this repo
-   to Pages in the Cloudflare dashboard (build output directory: `public`), or:
-   ```
-   wrangler pages deploy public
-   ```
-   Point Pages' `/api/*` routes at the deployed Worker (via a Pages Function
-   route or a custom domain routing rule) so the frontend's `fetch("/api/...")`
-   calls reach it.
+   This uploads both the Worker code and the `public/` static assets
+   (configured via `[assets]` in `wrangler.toml`) — one deploy, one origin,
+   no separate Pages project and no cross-origin routing to configure.
+   The URL it prints (something like `https://meridian-ops.<you>.workers.dev`)
+   is the whole app.
 
 ## Adding your iPhone home-screen icon
 Add square PNGs at `public/icon-192.png` and `public/icon-512.png` (any dark,

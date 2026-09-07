@@ -147,8 +147,9 @@ export default {
       return json({ error: "Not found" }, { status: 404 });
     }
 
-    // Static assets are served by Cloudflare Pages directly in production;
-    // this Worker only needs to answer /api/*. Fall through for local dev.
-    return new Response("Not found", { status: 404 });
+    // Everything else (the app shell, styles, manifest, etc.) is served
+    // from the assets binding — same origin as /api/*, so the session
+    // cookie is always first-party.
+    return env.ASSETS.fetch(request);
   },
 };
