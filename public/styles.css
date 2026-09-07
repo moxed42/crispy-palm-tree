@@ -152,7 +152,7 @@ header.topbar {
 main {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 16px 90px;
+  padding: 8px 16px 108px;
 }
 
 .day-group {
@@ -211,17 +211,29 @@ main {
   line-height: 1.5;
 }
 
-nav.tabbar {
+.bottom-bar {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
   max-width: 480px;
-  display: flex;
-  border-top: 1px solid var(--panel-border);
   background: var(--bg);
   padding-bottom: var(--safe-bottom);
+}
+
+.build-footer {
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  opacity: 0.6;
+  padding: 3px 0;
+  border-top: 1px solid var(--panel-border);
+}
+
+nav.tabbar {
+  display: flex;
 }
 
 nav.tabbar button {

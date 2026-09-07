@@ -1,0 +1,8 @@
+{
+  "name": "meridian-ops",
+  "private": true,
+  "scripts": {
+    "predeploy": "node scripts/gen-version.js",
+    "deploy": "wrangler deploy"
+  }
+}

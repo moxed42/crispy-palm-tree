@@ -101,6 +101,7 @@ const state = {
   date: todayStr(),
   activeCategoryId: null,
   expandedTaskId: null,
+  buildInfo: null,
 };
 
 const app = document.getElementById("app");
@@ -392,6 +393,25 @@ function renderHome() {
   `;
 }
 
+function formatBuildInfo() {
+  if (!state.buildInfo) return "";
+  const d = new Date(state.buildInfo.builtAt);
+  const stamp = isNaN(d) ? state.buildInfo.builtAt : d.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+  return `v${escapeHtml(state.buildInfo.commit)} · updated ${escapeHtml(stamp)}`;
+}
+
+async function loadBuildInfo() {
+  try {
+    const res = await fetch("/version.json", { cache: "no-store" });
+    if (res.ok) state.buildInfo = await res.json();
+  } catch {
+    // Not fatal — footer just stays blank if this fails.
+  }
+}
+
 function render() {
   const tabs = [{ id: "home", label: "OVERVIEW" }, ...state.categories.map((c) => ({ id: c.id, label: c.label }))];
   const active = state.activeCategoryId || "home";
@@ -403,9 +423,12 @@ function render() {
       <div class="program-name">${escapeHtml(state.program.name)}</div>
     </header>
     <main id="main"></main>
-    <nav class="tabbar">
-      ${tabs.map((t) => `<button data-tab="${t.id}" class="${t.id === active ? "active" : ""}">${escapeHtml(t.label)}</button>`).join("")}
-    </nav>
+    <div class="bottom-bar">
+      <div class="build-footer">${formatBuildInfo()}</div>
+      <nav class="tabbar">
+        ${tabs.map((t) => `<button data-tab="${t.id}" class="${t.id === active ? "active" : ""}">${escapeHtml(t.label)}</button>`).join("")}
+      </nav>
+    </div>
   `;
 
   document.getElementById("main").innerHTML =
@@ -541,6 +564,10 @@ async function loadDay(keepExpanded) {
 
 function boot() {
   loadDay();
+  loadBuildInfo().then(() => {
+    const el = document.querySelector(".build-footer");
+    if (el) el.textContent = formatBuildInfo();
+  });
 }
 
 boot();

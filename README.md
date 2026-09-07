@@ -31,7 +31,7 @@ already there:
 wrangler d1 execute meridian-ops-db --remote --file=worker/migrate-v2.sql
 node scripts/seed-from-md.js programs/week1 > worker/seed-week1.sql
 wrangler d1 execute meridian-ops-db --remote --file=worker/seed-week1.sql
-wrangler deploy
+npm run deploy
 ```
 (New setups can skip this — `worker/schema.sql` already includes everything.)
 
@@ -59,13 +59,20 @@ wrangler deploy
    ```
 7. **Deploy everything (frontend + API) in one shot:**
    ```
-   wrangler deploy
+   npm run deploy
    ```
    This uploads both the Worker code and the `public/` static assets
    (configured via `[assets]` in `wrangler.toml`) — one deploy, one origin,
    no separate Pages project and no cross-origin routing to configure.
    The URL it prints (something like `https://meridian-ops.<you>.workers.dev`)
    is the whole app.
+
+   Use `npm run deploy`, not `wrangler deploy` directly, going forward —
+   it runs `scripts/gen-version.js` first (an npm `predeploy` hook), which
+   stamps `public/version.json` with the current git commit and a build
+   timestamp. That's what shows up as the small "v&lt;commit&gt; · updated
+   &lt;time&gt;" line at the bottom of the app, so you always have a quick,
+   automatic way to confirm a deploy actually shipped your latest changes.
 
 ## Adding your iPhone home-screen icon
 Add square PNGs at `public/icon-192.png` and `public/icon-512.png` (any dark,
