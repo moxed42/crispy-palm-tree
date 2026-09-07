@@ -26,8 +26,8 @@ added to the home screen.
    ```
 5. **Generate and apply the seed data** (from the MD files):
    ```
-   node scripts/seed-from-md.js programs/week1 > worker/seed.sql
-   wrangler d1 execute meridian-ops-db --remote --file=worker/seed.sql
+   node scripts/seed-from-md.js programs/week1 > worker/seed-week1.sql
+   wrangler d1 execute meridian-ops-db --remote --file=worker/seed-week1.sql
    ```
 6. **Set your PIN** (numeric access code, kept as a secret — never in code):
    ```
@@ -53,11 +53,38 @@ on the iPhone: open the deployed URL in Safari → Share → **Add to Home
 Screen**. It launches full-screen, no browser chrome.
 
 ## Updating content going forward
-1. Generate/update an MD file in your Claude.ai chat.
-2. Save it into `programs/<program-id>/` in this repo (paste it to a Claude
-   Code session and ask it to commit + push, or commit it yourself).
-3. Push to `main`. The GitHub Action (`.github/workflows/update-content.yml`)
-   re-parses the program's MD files and re-applies the D1 seed automatically.
+
+Two ways to get an updated MD file from your Claude.ai chat into the live
+site — pick whichever fits the moment, both end the same way (a push to
+`main` that the GitHub Action turns into a D1 update within ~30-60 seconds):
+
+**Option A — GitHub's web editor, no tools needed.**
+1. Generate/update the MD in your Claude.ai chat, copy the content.
+2. On github.com, open this repo → navigate to `programs/week1/<file>.md` →
+   pencil icon (Edit) → paste the new content → "Commit changes" (commit
+   directly to `main` is fine for a private personal repo).
+3. Done — the Action fires automatically. Check the "Actions" tab if you
+   want to confirm it went green.
+   - New file instead of an edit? Use the "Add file" button in the
+     `programs/<program-id>/` folder the same way.
+
+**Option B — hand it to a Claude Code session (like this one).**
+1. Paste the updated MD content into the chat and say what changed.
+2. Ask it to update the file and push. It'll edit `programs/<program-id>/<file>.md`,
+   commit, and push to `main` for you — same trigger as Option A.
+   Useful when the change is bigger (a whole new program, restructuring
+   `program.json`) since the session can also run the parser locally first
+   to sanity-check the output before pushing.
+
+Either path is "the mechanism" — there's no separate sync step to remember;
+pushing the MD *is* the update. The Action re-parses every program under
+`programs/` on each push (not just the changed one) and re-applies each
+program's seed to D1, so it's always safe to re-run even without changes.
+
+**One thing to set up once for this to work:** add `CLOUDFLARE_API_TOKEN`
+and `CLOUDFLARE_ACCOUNT_ID` as repo secrets (Settings → Secrets and
+variables → Actions) — the token needs D1 edit permission. Without these
+the Action will fail at the "Apply each program's seed to D1" step.
 
 To add a whole new program (a different hobby/glow-up track) later:
 create `programs/<new-id>/` with its MD files and a `program.json` manifest

@@ -23,6 +23,30 @@ function sqlEscape(s) {
   return String(s).replace(/'/g, "''");
 }
 
+function slug(s) {
+  return String(s)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+}
+
+// Task IDs are derived from content (category + day + label), not row
+// position, so editing/reordering/inserting rows in an MD file doesn't
+// shift IDs for unrelated tasks and silently orphan their completion
+// history. Only true label collisions within the same day/category fall
+// back to a numeric suffix.
+function makeStableId(categoryId, dayKey, label, seen) {
+  const base = `${categoryId}-${slug(dayKey || "daily")}-${slug(label)}`;
+  let id = base;
+  let n = 2;
+  while (seen.has(id)) {
+    id = `${base}-${n++}`;
+  }
+  seen.add(id);
+  return id;
+}
+
 function parseTableRow(line) {
   const cells = line
     .split("|")
@@ -42,6 +66,7 @@ function parseFile(filePath, categoryId, categoryLabel, sortStart) {
   let inReferenceSection = false;
   let sort = sortStart;
   let tableHeader = null;
+  const seenIds = new Set();
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trimEnd();
@@ -83,7 +108,7 @@ function parseFile(filePath, categoryId, categoryLabel, sortStart) {
       const [label, ...rest] = cells;
       if (!label) continue;
       tasks.push({
-        id: `${categoryId}-${sort}`,
+        id: makeStableId(categoryId, dayKey, label, seenIds),
         categoryId,
         dayKey,
         label,
