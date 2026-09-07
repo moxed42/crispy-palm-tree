@@ -3,6 +3,6 @@
   "private": true,
   "scripts": {
     "predeploy": "node scripts/gen-version.js",
-    "deploy": "wrangler deploy"
+    "deploy": "npx wrangler deploy"
   }
 }
