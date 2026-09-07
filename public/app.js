@@ -424,12 +424,18 @@ function render() {
     </header>
     <main id="main"></main>
     <div class="bottom-bar">
-      <div class="build-footer">${formatBuildInfo()}</div>
+      <div class="build-footer">
+        <span>${formatBuildInfo()}</span>
+        <button type="button" id="forceRefreshBtn" title="Force refresh — pulls the latest deployed version">⟳ REFRESH</button>
+      </div>
       <nav class="tabbar">
         ${tabs.map((t) => `<button data-tab="${t.id}" class="${t.id === active ? "active" : ""}">${escapeHtml(t.label)}</button>`).join("")}
       </nav>
     </div>
   `;
+
+  const refreshBtn = document.getElementById("forceRefreshBtn");
+  if (refreshBtn) refreshBtn.addEventListener("click", forceRefresh);
 
   document.getElementById("main").innerHTML =
     active === "home" || !activeCategory ? renderHome() : renderCategoryView(activeCategory);
@@ -562,10 +568,20 @@ async function loadDay(keepExpanded) {
   render();
 }
 
+// Hard-reloads the page from the network, bypassing any cached copy —
+// iOS home-screen PWAs have no visible reload control and can otherwise
+// sit on a stale version indefinitely. A fresh query string guarantees
+// the browser treats this as a new document rather than reusing cache.
+function forceRefresh() {
+  const url = new URL(location.href);
+  url.searchParams.set("_r", Date.now().toString());
+  location.href = url.toString();
+}
+
 function boot() {
   loadDay();
   loadBuildInfo().then(() => {
-    const el = document.querySelector(".build-footer");
+    const el = document.querySelector(".build-footer span");
     if (el) el.textContent = formatBuildInfo();
   });
 }

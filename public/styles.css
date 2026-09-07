@@ -223,13 +223,35 @@ main {
 }
 
 .build-footer {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   font-size: 9px;
   letter-spacing: 0.04em;
   color: var(--text-dim);
-  opacity: 0.6;
-  padding: 3px 0;
+  padding: 4px 0;
   border-top: 1px solid var(--panel-border);
+}
+
+.build-footer span {
+  opacity: 0.6;
+}
+
+.build-footer button {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  padding: 8px 10px;
+  border-radius: 4px;
+  min-height: 32px;
+}
+
+.build-footer button:active {
+  background: var(--accent-dim);
 }
 
 nav.tabbar {
