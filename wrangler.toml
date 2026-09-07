@@ -5,7 +5,7 @@ compatibility_date = "2024-09-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "meridian-ops-db"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "5b594ec4-5ed2-4b15-a26a-8da85f14c316"
 
 [site]
 bucket = "public"
