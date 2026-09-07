@@ -1,0 +1,18 @@
+name = "meridian-ops"
+main = "worker/index.js"
+compatibility_date = "2024-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "meridian-ops-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+[site]
+bucket = "public"
+
+# Set the PIN as a secret, never in this file:
+#   wrangler secret put PIN
+#
+# After creating the D1 database with:
+#   wrangler d1 create meridian-ops-db
+# copy the database_id it prints into database_id above.

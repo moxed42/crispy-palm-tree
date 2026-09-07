@@ -1,0 +1,30 @@
+name: Update program content
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "programs/**"
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate seed SQL for changed programs
+        run: |
+          for dir in programs/*/; do
+            name=$(basename "$dir")
+            if [ -f "$dir/program.json" ]; then
+              node scripts/seed-from-md.js "$dir" > "worker/seed-$name.sql"
+            fi
+          done
+      - name: Apply seed to D1
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: d1 execute meridian-ops-db --remote --file=worker/seed-week1.sql

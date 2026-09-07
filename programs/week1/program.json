@@ -1,0 +1,17 @@
+{
+  "id": "week1",
+  "name": "Transit Cycle 01",
+  "theme_concept": "MERIDIAN // OPS — long-haul transit vessel systems terminal",
+  "active": true,
+  "files": [
+    "week1-strength-plan.md",
+    "week1-meal-plan.md",
+    "sleep-hydration-supplements.md",
+    "week1-overview.md"
+  ],
+  "categories": {
+    "week1-strength-plan.md": { "id": "propulsion", "label": "PROPULSION" },
+    "week1-meal-plan.md": { "id": "fuel-cells", "label": "FUEL CELLS" },
+    "sleep-hydration-supplements.md": { "id": "life-support", "label": "LIFE SUPPORT" }
+  }
+}
