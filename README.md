@@ -9,9 +9,31 @@ origin on purpose — it keeps the PIN session cookie first-party, which
 matters a lot on iOS Safari in home-screen/standalone mode.
 
 ## Systems mapping (Transit Cycle 01)
-- **PROPULSION** — training plan (`programs/week1/week1-strength-plan.md`)
-- **FUEL CELLS** — meals (`programs/week1/week1-meal-plan.md`)
+- **PROPULSION** — training plan (`programs/week1/week1-strength-plan.md`). A
+  `kind: "sets"` category: tap an exercise to expand it, log actual
+  weight/reps per set, and see hypermobility-aware form cues (sourced from
+  established hypermobility/EDS physical-therapy guidance, not social media).
+- **FUEL CELLS** — meals (`programs/week1/week1-meal-plan.md`). A `kind:
+  "checkbox"` category: tap a meal to expand its full recipe (ingredients +
+  steps), parsed straight out of the MD file's "## Recipes" section.
 - **LIFE SUPPORT** — sleep/hydration/supplements (`programs/week1/sleep-hydration-supplements.md`)
+
+Every category (Propulsion included) has a date picker at the top, so you
+can look back at any past day's tasks and what was actually logged — not
+just today.
+
+## Migrating an existing deployment to this schema
+If you already ran the original setup (v1: simple checkboxes only), the
+live database needs a small migration before this version's API will work
+— it adds workout set-logging and recipe/exercise metadata on top of what's
+already there:
+```
+wrangler d1 execute meridian-ops-db --remote --file=worker/migrate-v2.sql
+node scripts/seed-from-md.js programs/week1 > worker/seed-week1.sql
+wrangler d1 execute meridian-ops-db --remote --file=worker/seed-week1.sql
+wrangler deploy
+```
+(New setups can skip this — `worker/schema.sql` already includes everything.)
 
 ## One-time setup
 
