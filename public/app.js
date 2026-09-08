@@ -256,19 +256,47 @@ function renderChecklistTask(task) {
   `;
 }
 
+const NUTRITION_ORDER = ["Calories", "Protein", "Fat", "Carbs", "Fiber"];
+
+function renderNutritionFacts(nutrition) {
+  if (!nutrition) return "";
+  const keys = NUTRITION_ORDER.filter((k) => nutrition[k]).concat(
+    Object.keys(nutrition).filter((k) => !NUTRITION_ORDER.includes(k))
+  );
+  if (!keys.length) return "";
+  return `
+    <div class="expand-subhead">Nutrition facts${nutrition.__note ? ` (${escapeHtml(nutrition.__note)})` : ""}</div>
+    <div class="nutrition-row">
+      ${keys.map((k) => `<div class="nutrition-chip"><strong>${escapeHtml(nutrition[k])}</strong><span>${escapeHtml(k)}</span></div>`).join("")}
+    </div>
+  `;
+}
+
 function renderRecipeExpand(recipe) {
   if (!recipe) return `<div class="expand-panel"><div class="reference-note">No recipe on file for this one.</div></div>`;
+
+  // Two shapes come through here: the older {ingredients, steps} arrays
+  // (from the "meal-plan" layout) and the richer {nutrition, ingredientSets,
+  // instructionSets, prepTime, servings} shape (from
+  // "meal-recipes-nutrition"). Normalize both to sets so rendering is one path.
+  const ingredientSets = recipe.ingredientSets || (recipe.ingredients ? [{ label: null, items: recipe.ingredients }] : []);
+  const instructionSets = recipe.instructionSets || (recipe.steps ? [{ label: null, steps: recipe.steps }] : []);
+
   return `
     <div class="expand-panel">
       <div class="expand-title">${escapeHtml(recipe.title)}</div>
-      ${recipe.ingredients && recipe.ingredients.length ? `
-        <div class="expand-subhead">Ingredients</div>
-        <ul class="expand-list">${recipe.ingredients.map((i) => `<li>${escapeHtml(i)}</li>`).join("")}</ul>
+      ${recipe.prepTime || recipe.servings ? `
+        <div class="recipe-meta">${[recipe.prepTime ? `Prep: ${escapeHtml(recipe.prepTime)}` : "", recipe.servings ? `Serves: ${escapeHtml(recipe.servings)}` : ""].filter(Boolean).join(" · ")}</div>
       ` : ""}
-      ${recipe.steps && recipe.steps.length ? `
-        <div class="expand-subhead">Steps</div>
-        <ol class="expand-list">${recipe.steps.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ol>
-      ` : ""}
+      ${renderNutritionFacts(recipe.nutrition)}
+      ${ingredientSets.map((set) => `
+        <div class="expand-subhead">${set.label ? escapeHtml(set.label) : "Ingredients"}</div>
+        <ul class="expand-list">${set.items.map((i) => `<li>${escapeHtml(i)}</li>`).join("")}</ul>
+      `).join("")}
+      ${instructionSets.map((set) => `
+        <div class="expand-subhead">${set.label ? escapeHtml(set.label) : "Steps"}</div>
+        <ol class="expand-list">${set.steps.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ol>
+      `).join("")}
     </div>
   `;
 }

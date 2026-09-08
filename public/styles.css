@@ -385,6 +385,42 @@ nav.tabbar button.active { color: var(--accent); }
   line-height: 1.6;
 }
 
+.recipe-meta {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.nutrition-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nutrition-chip {
+  flex: 1 1 60px;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  padding: 6px 4px;
+  text-align: center;
+}
+
+.nutrition-chip strong {
+  display: block;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.nutrition-chip span {
+  display: block;
+  font-size: 9px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
 .caution-note {
   background: rgba(224, 169, 79, 0.1);
   border: 1px solid var(--warn);

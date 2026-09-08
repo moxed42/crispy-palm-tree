@@ -15,8 +15,8 @@
       "id": "fuel-cells",
       "label": "FUEL CELLS",
       "kind": "checkbox",
-      "source": "week1-meal-plan.md",
-      "layout": "meal-plan"
+      "source": "week1-recipes-nutrition.md",
+      "layout": "meal-recipes-nutrition"
     },
     {
       "id": "life-support",

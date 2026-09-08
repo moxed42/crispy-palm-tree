@@ -13,9 +13,14 @@ matters a lot on iOS Safari in home-screen/standalone mode.
   `kind: "sets"` category: tap an exercise to expand it, log actual
   weight/reps per set, and see hypermobility-aware form cues (sourced from
   established hypermobility/EDS physical-therapy guidance, not social media).
-- **FUEL CELLS** — meals (`programs/week1/week1-meal-plan.md`). A `kind:
-  "checkbox"` category: tap a meal to expand its full recipe (ingredients +
-  steps), parsed straight out of the MD file's "## Recipes" section.
+- **FUEL CELLS** — meals (`programs/week1/week1-recipes-nutrition.md`). A
+  `kind: "checkbox"` category: tap a meal to expand its full nutrition
+  facts (calories/protein/fat/carbs/fiber), prep time, ingredients, and
+  step-by-step instructions — all parsed straight out of the MD file, no
+  external sourcing needed since it's already this detailed.
+  (`week1-meal-plan.md` is kept in the repo for its grocery list and
+  fallback-option reference content, but is no longer the parse source —
+  superseded by the richer nutrition file.)
 - **LIFE SUPPORT** — sleep/hydration/supplements (`programs/week1/sleep-hydration-supplements.md`)
 
 Every category (Propulsion included) has a date picker at the top, so you

@@ -10,11 +10,17 @@
 //     of folding it into detail, since the frontend needs it separately.
 //   - "simple-table": one flat markdown table, no day sections (e.g. the
 //     supplement schedule).
-//   - "meal-plan": the specific two-part shape of the meal plan file — a
-//     "## Weekly overview" table (day/lunch/dinner) plus a separate
-//     "## Recipes" section keyed by "### <Name> (<Day> <lunch|dinner>)"
+//   - "meal-plan": the specific two-part shape of the original meal plan
+//     file — a "## Weekly overview" table (day/lunch/dinner) plus a
+//     separate "## Recipes" section keyed by "### <Name> (<Day> <lunch|dinner>)"
 //     that supplies ingredients/steps, attached to the matching task as
-//     meta.recipe.
+//     meta.recipe. Superseded by meal-recipes-nutrition below, kept for
+//     reference/reuse in a future program.
+//   - "meal-recipes-nutrition": a richer single-file meal source with full
+//     nutrition facts (calories/protein/fat/carbs/fiber), prep time, and
+//     ingredients/instructions inline per recipe (see the parser below for
+//     the exact expected shape). This is what week1's FUEL CELLS category
+//     actually uses.
 
 const fs = require("fs");
 const path = require("path");
@@ -266,6 +272,163 @@ function parseMealPlan(filePath, categoryId) {
   return tasks;
 }
 
+// ---------- layout: meal-recipes-nutrition ----------
+// A richer, single-file meal source: "## Daily Template" (recurring items,
+// no day) followed by "## Monday".."## Sunday" sections, each holding
+// "### <Recipe Name> (Lunch|Dinner|Breakfast|Snack)" blocks with prep
+// time/servings, a "**Nutrition Facts**" bullet list, one or more
+// ingredient lists ("**Ingredients**" or "**Option A: ...**" /
+// "**Option B: ...**"), and one or more instruction lists ("**Instructions**",
+// "**Pressure Cooker Instructions**", "**Stovetop Instructions**", etc).
+// Trailing sections like "## Morning Wellness Shot" or "## Summary
+// Nutrition Table" aren't day sections, so they're skipped rather than
+// misparsed as one.
+const DAY_FULL_TO_ABBR = {
+  monday: "Mon", tuesday: "Tue", wednesday: "Wed", thursday: "Thu",
+  friday: "Fri", saturday: "Sat", sunday: "Sun",
+};
+
+function parseMealRecipesNutrition(filePath, categoryId) {
+  const lines = fs.readFileSync(filePath, "utf8").split("\n");
+  const tasks = [];
+  const seenIds = new Set();
+  let sort = 0;
+  let dayKey = null;
+  let current = null;
+  let mode = null;
+
+  function flush() {
+    if (!current) return;
+    const suffix = current.mealType ? ` (${current.mealType[0].toUpperCase()}${current.mealType.slice(1)})` : "";
+    const label = `${current.title}${suffix}`;
+    const detailParts = [];
+    if (current.nutrition.Calories) detailParts.push(`${current.nutrition.Calories} kcal`);
+    if (current.nutrition.Protein) detailParts.push(`${current.nutrition.Protein} protein`);
+    tasks.push({
+      id: makeStableId(categoryId, dayKey, label, seenIds),
+      categoryId,
+      dayKey,
+      label,
+      detail: detailParts.join(" · ") || null,
+      meta: {
+        mealType: current.mealType || null,
+        recipe: {
+          title: current.title,
+          prepTime: current.prepTime,
+          servings: current.servings,
+          nutrition: current.nutrition,
+          ingredientSets: current.ingredientSets.filter((s) => s.items.length),
+          instructionSets: current.instructionSets.filter((s) => s.steps.length),
+        },
+      },
+      sort: sort++,
+    });
+    current = null;
+  }
+
+  for (const raw of lines) {
+    const line = raw.trimEnd();
+
+    const h2 = line.match(/^##\s+(.*)/);
+    if (h2) {
+      flush();
+      const heading = h2[1].trim().toLowerCase();
+      if (heading === "daily template") dayKey = null;
+      else if (DAY_FULL_TO_ABBR[heading]) dayKey = DAY_FULL_TO_ABBR[heading];
+      else dayKey = "__skip__"; // wellness shot / summary table / anything else
+      mode = null;
+      continue;
+    }
+    if (dayKey === "__skip__") continue;
+
+    const h3 = line.match(/^###\s+(.*)/);
+    if (h3) {
+      flush();
+      const heading = h3[1].trim();
+      const m = heading.match(/^(.*)\((Lunch|Dinner|Breakfast|Snack)\)\s*$/i);
+      current = {
+        title: (m ? m[1] : heading).trim(),
+        mealType: m ? m[2].toLowerCase() : null,
+        prepTime: null,
+        servings: null,
+        nutrition: {},
+        ingredientSets: [],
+        instructionSets: [],
+      };
+      mode = null;
+      continue;
+    }
+    if (!current) continue;
+
+    const prepLine = line.match(/^\*\*Prep time:\*\*\s*(.*?)(?:\s*\|\s*\*\*Serves:\*\*\s*(.*))?$/i);
+    if (prepLine) {
+      current.prepTime = prepLine[1].trim();
+      if (prepLine[2]) current.servings = prepLine[2].trim();
+      continue;
+    }
+
+    if (/^\*\*Nutrition Facts/i.test(line.trim())) {
+      mode = "nutrition";
+      continue;
+    }
+
+    const ingredientsHeader = line.match(/^\*\*(Option [A-Z]:[^*]*|Ingredients)\*\*/i);
+    if (ingredientsHeader) {
+      mode = "ingredients";
+      current.ingredientSets.push({
+        label: /^option/i.test(ingredientsHeader[1]) ? ingredientsHeader[1].trim() : null,
+        items: [],
+      });
+      continue;
+    }
+
+    const instructionsHeader = line.match(/^\*\*(Instructions[^*]*|Pressure Cooker Instructions|Stovetop Instructions)\*\*/i);
+    if (instructionsHeader) {
+      mode = "instructions";
+      const raw2 = instructionsHeader[1].trim();
+      current.instructionSets.push({ label: /^instructions$/i.test(raw2) ? null : raw2, steps: [] });
+      continue;
+    }
+
+    if (mode === "nutrition") {
+      const kv = line.match(/^-\s*([A-Za-z][A-Za-z\s]*):\s*(.+)$/);
+      if (kv) current.nutrition[kv[1].trim()] = kv[2].trim();
+      continue;
+    }
+    if (mode === "ingredients") {
+      const bullet = line.match(/^-\s+(.*)/);
+      if (bullet) current.ingredientSets[current.ingredientSets.length - 1].items.push(bullet[1].trim());
+      continue;
+    }
+    if (mode === "instructions") {
+      const numbered = line.match(/^\d+\.\s+(.*)/);
+      if (numbered) current.instructionSets[current.instructionSets.length - 1].steps.push(numbered[1].trim());
+      continue;
+    }
+  }
+  flush();
+
+  // This source has no Saturday section ("repeat any favorite" by design in
+  // the original plan) — keep that placeholder so the week stays 7 days
+  // wide in the UI instead of showing an empty Saturday.
+  if (!tasks.some((t) => t.dayKey === "Sat")) {
+    for (const mealType of ["lunch", "dinner"]) {
+      const label = `Repeat any favorite (${mealType[0].toUpperCase()}${mealType.slice(1)})`;
+      tasks.push({
+        id: makeStableId(categoryId, "Sat", label, seenIds),
+        categoryId,
+        dayKey: "Sat",
+        label,
+        detail: null,
+        meta: { mealType },
+        sort: sort++,
+      });
+    }
+  }
+
+  return tasks;
+}
+
 function main() {
   const programDir = process.argv[2];
   if (!programDir) {
@@ -296,6 +459,7 @@ function main() {
     let tasks;
     if (cat.layout === "day-headings") tasks = parseDayHeadings(filePath, categoryId, cat.kind);
     else if (cat.layout === "meal-plan") tasks = parseMealPlan(filePath, categoryId);
+    else if (cat.layout === "meal-recipes-nutrition") tasks = parseMealRecipesNutrition(filePath, categoryId);
     else tasks = parseSimpleTable(filePath, categoryId);
 
     for (const t of tasks) {
