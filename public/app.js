@@ -230,6 +230,26 @@ const MASCOT_LINES = [
 ];
 
 // ---------- Category rendering ----------
+const WEEKDAY_ABBR = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAY_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+// day_key shows up in two shapes depending on the source MD's layout —
+// a short abbreviation ("Mon") for meals, or a full descriptive heading
+// ("Day 1 (Tuesday) — Upper Body") for training — so match against both
+// forms rather than assuming one. A null day_key means "recurring daily",
+// which always matches regardless of the selected date.
+function taskMatchesDate(task, dateStr) {
+  if (!task.day_key) return true;
+  const d = new Date(dateStr + "T00:00:00");
+  const abbr = WEEKDAY_ABBR[d.getDay()];
+  const full = WEEKDAY_FULL[d.getDay()];
+  return task.day_key.includes(abbr) || task.day_key.includes(full);
+}
+
+function tasksForCategoryOnDate(categoryId, dateStr) {
+  return state.tasks.filter((t) => t.category_id === categoryId && taskMatchesDate(t, dateStr));
+}
+
 function groupTasksByDay(tasks) {
   const groups = new Map();
   for (const t of tasks) {
@@ -349,7 +369,7 @@ function renderSetsExpand(task, logs, cues) {
 }
 
 function renderCategoryView(category) {
-  const tasks = state.tasks.filter((t) => t.category_id === category.id);
+  const tasks = tasksForCategoryOnDate(category.id, state.date);
   const groups = groupTasksByDay(tasks);
   const renderTask = category.kind === "sets" ? renderSetsTask : renderChecklistTask;
 
@@ -360,7 +380,7 @@ function renderCategoryView(category) {
     html += dayTasks.map(renderTask).join("");
     html += `</div>`;
   }
-  return html || renderDatePicker() + `<div class="reference-note">No entries logged for this system yet.</div>`;
+  return html || renderDatePicker() + `<div class="reference-note">Nothing scheduled for this system on this date.</div>`;
 }
 
 function renderDatePicker() {
@@ -377,7 +397,8 @@ function renderHome() {
   const totalXp = state.xpEvents * XP_PER_EVENT;
   const level = levelFromXp(totalXp);
   const streak = computeStreak();
-  const todayTotal = state.tasks.length;
+  const todayTasks = state.categories.flatMap((c) => tasksForCategoryOnDate(c.id, state.date));
+  const todayTotal = todayTasks.length;
   const todayDoneCount =
     state.completionsToday.size + new Set(state.setLogsToday.map((l) => l.task_id)).size;
   const thisLevelFloor = xpForLevel(level);
@@ -405,7 +426,7 @@ function renderHome() {
       <h3>Systems</h3>
       ${state.categories
         .map((c) => {
-          const catTasks = state.tasks.filter((t) => t.category_id === c.id);
+          const catTasks = tasksForCategoryOnDate(c.id, state.date);
           const done = c.kind === "sets"
             ? new Set(state.setLogsToday.filter((l) => catTasks.some((t) => t.id === l.task_id)).map((l) => l.task_id)).size
             : catTasks.filter((t) => state.completionsToday.has(t.id)).length;
