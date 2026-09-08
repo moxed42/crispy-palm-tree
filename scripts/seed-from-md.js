@@ -72,20 +72,60 @@ function parseDayHeadings(filePath, categoryId, kind) {
   const tasks = [];
   const seenIds = new Set();
   let dayKey = null;
-  let inTable = false;
   let tableHeader = null;
   let sort = 0;
+  // Some non-day sections (e.g. "## Daily steps target") are a real daily
+  // task described in prose/bullets rather than a table — captured as one
+  // recurring (day_key null) task with a "checkbox" kind override, since
+  // "log a set" doesn't fit a step count. bullets/intro accumulate here
+  // until the next heading, then get joined into that task's detail.
+  let bulletCapture = null;
+
+  function flushBullets() {
+    if (!bulletCapture) return;
+    if (bulletCapture.bullets.length || bulletCapture.intro) {
+      const detail = [bulletCapture.intro, ...bulletCapture.bullets].filter(Boolean).join(" · ");
+      tasks.push({
+        id: makeStableId(categoryId, null, bulletCapture.title, seenIds),
+        categoryId,
+        dayKey: null,
+        label: bulletCapture.title,
+        detail,
+        meta: { kind: "checkbox" },
+        sort: sort++,
+      });
+    }
+    bulletCapture = null;
+  }
 
   for (const raw of lines) {
     const line = raw.trimEnd();
     const h2 = line.match(/^##\s+(.*)/);
     if (h2) {
+      flushBullets();
       const heading = h2[1].trim();
-      dayKey = /^day\s+\d/i.test(heading) ? heading : null;
-      inTable = false;
+      if (/^day\s+\d/i.test(heading)) {
+        dayKey = heading;
+      } else if (/steps target/i.test(heading)) {
+        dayKey = null;
+        bulletCapture = { title: "Daily steps target", bullets: [], intro: null };
+      } else {
+        dayKey = null;
+      }
       tableHeader = null;
       continue;
     }
+
+    if (bulletCapture) {
+      const bullet = line.match(/^[-*]\s+(.*)/);
+      if (bullet) {
+        bulletCapture.bullets.push(bullet[1].replace(/\*\*/g, "").trim());
+      } else if (line.trim() && !bulletCapture.intro) {
+        bulletCapture.intro = line.replace(/\*\*/g, "").trim();
+      }
+      continue;
+    }
+
     if (!dayKey) continue;
     if (!line.trim().startsWith("|")) {
       tableHeader = null;
@@ -95,7 +135,6 @@ function parseDayHeadings(filePath, categoryId, kind) {
     const cells = parseTableRow(line);
     if (!tableHeader) {
       tableHeader = cells;
-      inTable = true;
       continue;
     }
     const [label, setsReps, notes] = cells;
@@ -111,6 +150,7 @@ function parseDayHeadings(filePath, categoryId, kind) {
       sort: sort++,
     });
   }
+  flushBullets();
   return tasks;
 }
 
@@ -131,38 +171,79 @@ function parseSimpleTable(filePath, categoryId) {
   let inReference = false;
   let tableHeader = null;
   let sort = 0;
+  // A non-reference section with no table (e.g. "## Sleep", "## Hydration")
+  // still describes one real daily task in prose/bullets — captured as a
+  // single task per section instead of being silently dropped. If the
+  // section turns out to be table-shaped instead (e.g. the supplement
+  // schedule), sectionTitle gets cleared the moment a "|" row appears, so
+  // this stays a no-op for those and existing table parsing is untouched.
+  let sectionTitle = null;
+  let bullets = [];
+  let intro = null;
+
+  function flushSection() {
+    if (sectionTitle && (bullets.length || intro)) {
+      const detail = [intro, ...bullets].filter(Boolean).join(" · ");
+      tasks.push({
+        id: makeStableId(categoryId, null, sectionTitle, seenIds),
+        categoryId,
+        dayKey: null,
+        label: sectionTitle,
+        detail,
+        meta: null,
+        sort: sort++,
+      });
+    }
+    sectionTitle = null;
+    bullets = [];
+    intro = null;
+  }
 
   for (const raw of lines) {
     const line = raw.trimEnd();
     const h2 = line.match(/^##\s+(.*)/);
     if (h2) {
+      flushSection();
       inReference = isReferenceHeading(h2[1]);
+      sectionTitle = inReference ? null : h2[1].trim();
       tableHeader = null;
       continue;
     }
     if (inReference) continue;
-    if (!line.trim().startsWith("|")) {
-      tableHeader = null;
+
+    if (line.trim().startsWith("|")) {
+      sectionTitle = null; // table-shaped section — not a bullet task
+      bullets = [];
+      intro = null;
+      if (isTableSeparator(line)) continue;
+      const cells = parseTableRow(line);
+      if (!tableHeader) {
+        tableHeader = cells;
+        continue;
+      }
+      const [label, ...rest] = cells;
+      if (!label) continue;
+      tasks.push({
+        id: makeStableId(categoryId, null, label, seenIds),
+        categoryId,
+        dayKey: null,
+        label,
+        detail: rest.join(" — ") || null,
+        meta: null,
+        sort: sort++,
+      });
       continue;
     }
-    if (isTableSeparator(line)) continue;
-    const cells = parseTableRow(line);
-    if (!tableHeader) {
-      tableHeader = cells;
-      continue;
+    tableHeader = null;
+
+    const bullet = line.match(/^[-*]\s+(.*)/);
+    if (bullet && sectionTitle) {
+      bullets.push(bullet[1].replace(/\*\*/g, "").trim());
+    } else if (sectionTitle && line.trim() && !intro) {
+      intro = line.replace(/\*\*/g, "").trim();
     }
-    const [label, ...rest] = cells;
-    if (!label) continue;
-    tasks.push({
-      id: makeStableId(categoryId, null, label, seenIds),
-      categoryId,
-      dayKey: null,
-      label,
-      detail: rest.join(" — ") || null,
-      meta: null,
-      sort: sort++,
-    });
   }
+  flushSection();
   return tasks;
 }
 

@@ -263,12 +263,16 @@ function groupTasksByDay(tasks) {
 
 function renderChecklistTask(task) {
   const checked = state.completionsToday.has(task.id);
-  const expanded = state.expandedTaskId === task.id;
   const recipe = task.meta && task.meta.recipe;
+  // Only meal tasks carry recipe data — a Sleep/Hydration/steps-target
+  // task tapped for "detail" would otherwise show a confusing "no recipe
+  // on file" panel, so those simply aren't expandable (their full text is
+  // already shown inline via task.detail).
+  const expanded = recipe && state.expandedTaskId === task.id;
   return `
     <div class="task-row" data-task-id="${task.id}">
       <div class="task-check ${checked ? "checked" : ""}" data-action="toggle" data-task-id="${task.id}">${checked ? "✓" : ""}</div>
-      <div class="task-body" data-action="expand" data-task-id="${task.id}">
+      <div class="task-body" ${recipe ? `data-action="expand" data-task-id="${task.id}"` : ""}>
         <div class="task-label ${checked ? "checked" : ""}">${escapeHtml(task.label)}</div>
         ${task.detail ? `<div class="task-detail">${escapeHtml(task.detail)}</div>` : ""}
       </div>
@@ -374,10 +378,19 @@ function renderSetsExpand(task, logs, cues) {
   `;
 }
 
+// A task's own meta.kind (e.g. "checkbox" on an otherwise sets-kind
+// category's single daily-target task) wins over its category's default —
+// lets a mostly-sets category like Propulsion carry one plain checklist
+// item (daily steps) without needing a whole separate category for it.
+function taskKind(task, category) {
+  return (task.meta && task.meta.kind) || category.kind;
+}
+
 function renderCategoryView(category) {
   const tasks = tasksForCategoryOnDate(category.id, state.date);
   const groups = groupTasksByDay(tasks);
-  const renderTask = category.kind === "sets" ? renderSetsTask : renderChecklistTask;
+  const renderTask = (task) =>
+    taskKind(task, category) === "sets" ? renderSetsTask(task) : renderChecklistTask(task);
 
   let html = renderDatePicker();
   for (const [dayKey, dayTasks] of groups) {
@@ -443,9 +456,14 @@ function renderHome() {
       ${state.categories
         .map((c) => {
           const catTasks = tasksForCategoryOnDate(c.id, state.date);
-          const done = c.kind === "sets"
-            ? new Set(state.setLogsToday.filter((l) => catTasks.some((t) => t.id === l.task_id)).map((l) => l.task_id)).size
-            : catTasks.filter((t) => state.completionsToday.has(t.id)).length;
+          const setsTaskIds = new Set(catTasks.filter((t) => taskKind(t, c) === "sets").map((t) => t.id));
+          const loggedSetsDone = new Set(
+            state.setLogsToday.filter((l) => setsTaskIds.has(l.task_id)).map((l) => l.task_id)
+          ).size;
+          const checkboxDone = catTasks.filter(
+            (t) => taskKind(t, c) !== "sets" && state.completionsToday.has(t.id)
+          ).length;
+          const done = loggedSetsDone + checkboxDone;
           return `<div class="task-row" data-goto="${c.id}">
             <div class="task-body">
               <div class="task-label">${escapeHtml(c.label)}</div>

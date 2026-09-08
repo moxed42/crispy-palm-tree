@@ -13,15 +13,24 @@ matters a lot on iOS Safari in home-screen/standalone mode.
   `kind: "sets"` category: tap an exercise to expand it, log actual
   weight/reps per set, and see hypermobility-aware form cues (sourced from
   established hypermobility/EDS physical-therapy guidance, not social media).
+  Also carries one plain checkbox task, "Daily steps target" — a task's
+  `meta.kind` can override its category's default kind, so a mostly-sets
+  category can still hold a single checklist item without needing its own
+  category.
 - **FUEL CELLS** — meals (`programs/week1/week1-recipes-nutrition.md`). A
   `kind: "checkbox"` category: tap a meal to expand its full nutrition
   facts (calories/protein/fat/carbs/fiber), prep time, ingredients, and
   step-by-step instructions — all parsed straight out of the MD file, no
-  external sourcing needed since it's already this detailed.
+  external sourcing needed since it's already this detailed. Also includes
+  the Morning Wellness Shot (weekly-batch item, shown in the recurring
+  daily group since it isn't tied to one weekday).
   (`week1-meal-plan.md` is kept in the repo for its grocery list and
   fallback-option reference content, but is no longer the parse source —
   superseded by the richer nutrition file.)
-- **LIFE SUPPORT** — sleep/hydration/supplements (`programs/week1/sleep-hydration-supplements.md`)
+- **LIFE SUPPORT** — sleep/hydration/supplements (`programs/week1/sleep-hydration-supplements.md`).
+  Sleep and Hydration are each their own daily checkbox task (their
+  guidance is prose/bullets, not a table, so they're captured as one task
+  per section rather than one per line) alongside the supplement schedule.
 
 Every category (Propulsion included) has a date picker at the top, so you
 can look back at any past day's tasks and what was actually logged — not
