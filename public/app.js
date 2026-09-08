@@ -298,17 +298,21 @@ function renderRecipeExpand(recipe) {
 
   // Two shapes come through here: the older {ingredients, steps} arrays
   // (from the "meal-plan" layout) and the richer {nutrition, ingredientSets,
-  // instructionSets, prepTime, servings} shape (from
-  // "meal-recipes-nutrition"). Normalize both to sets so rendering is one path.
+  // instructionSets, metaFields, note} shape (from "meal-recipes-nutrition").
+  // Normalize both to sets so rendering is one path.
   const ingredientSets = recipe.ingredientSets || (recipe.ingredients ? [{ label: null, items: recipe.ingredients }] : []);
   const instructionSets = recipe.instructionSets || (recipe.steps ? [{ label: null, steps: recipe.steps }] : []);
+
+  const metaLine = recipe.metaFields && recipe.metaFields.length
+    ? recipe.metaFields.map((f) => `${f.label}: ${f.value}`).join(" · ")
+    : [recipe.prepTime ? `Prep: ${recipe.prepTime}` : "", recipe.servings ? `Serves: ${recipe.servings}` : ""]
+        .filter(Boolean)
+        .join(" · ");
 
   return `
     <div class="expand-panel">
       <div class="expand-title">${escapeHtml(recipe.title)}</div>
-      ${recipe.prepTime || recipe.servings ? `
-        <div class="recipe-meta">${[recipe.prepTime ? `Prep: ${escapeHtml(recipe.prepTime)}` : "", recipe.servings ? `Serves: ${escapeHtml(recipe.servings)}` : ""].filter(Boolean).join(" · ")}</div>
-      ` : ""}
+      ${metaLine ? `<div class="recipe-meta">${escapeHtml(metaLine)}</div>` : ""}
       ${renderNutritionFacts(recipe.nutrition)}
       ${ingredientSets.map((set) => `
         <div class="expand-subhead">${set.label ? escapeHtml(set.label) : "Ingredients"}</div>
@@ -318,6 +322,7 @@ function renderRecipeExpand(recipe) {
         <div class="expand-subhead">${set.label ? escapeHtml(set.label) : "Steps"}</div>
         <ol class="expand-list">${set.steps.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ol>
       `).join("")}
+      ${recipe.note ? `<div class="reference-note">${escapeHtml(recipe.note)}</div>` : ""}
     </div>
   `;
 }

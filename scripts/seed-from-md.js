@@ -299,7 +299,19 @@ function parseMealRecipesNutrition(filePath, categoryId) {
 
   function flush() {
     if (!current) return;
-    const suffix = current.mealType ? ` (${current.mealType[0].toUpperCase()}${current.mealType.slice(1)})` : "";
+    const ingredientSets = current.ingredientSets.filter((s) => s.items.length);
+    const instructionSets = current.instructionSets.filter((s) => s.steps.length);
+    const hasNutrition = Object.keys(current.nutrition).length > 0;
+    // Guard against pushing a bogus task for a section that got opened
+    // (e.g. by the wellness-shot special case) but never actually had
+    // recipe content follow it.
+    if (!ingredientSets.length && !instructionSets.length && !hasNutrition) {
+      current = null;
+      return;
+    }
+    const suffix = current.mealType
+      ? ` (${current.mealType[0].toUpperCase()}${current.mealType.slice(1)})`
+      : current.frequencyNote ? ` (${current.frequencyNote})` : "";
     const label = `${current.title}${suffix}`;
     const detailParts = [];
     if (current.nutrition.Calories) detailParts.push(`${current.nutrition.Calories} kcal`);
@@ -315,10 +327,11 @@ function parseMealRecipesNutrition(filePath, categoryId) {
         recipe: {
           title: current.title,
           prepTime: current.prepTime,
-          servings: current.servings,
+          metaFields: current.metaFields,
           nutrition: current.nutrition,
-          ingredientSets: current.ingredientSets.filter((s) => s.items.length),
-          instructionSets: current.instructionSets.filter((s) => s.steps.length),
+          ingredientSets,
+          instructionSets,
+          note: current.note || null,
         },
       },
       sort: sort++,
@@ -332,10 +345,34 @@ function parseMealRecipesNutrition(filePath, categoryId) {
     const h2 = line.match(/^##\s+(.*)/);
     if (h2) {
       flush();
-      const heading = h2[1].trim().toLowerCase();
-      if (heading === "daily template") dayKey = null;
-      else if (DAY_FULL_TO_ABBR[heading]) dayKey = DAY_FULL_TO_ABBR[heading];
-      else dayKey = "__skip__"; // wellness shot / summary table / anything else
+      const headingRaw = h2[1].trim();
+      const heading = headingRaw.toLowerCase();
+      if (heading === "daily template") {
+        dayKey = null;
+      } else if (DAY_FULL_TO_ABBR[heading]) {
+        dayKey = DAY_FULL_TO_ABBR[heading];
+      } else if (/wellness shot/i.test(headingRaw)) {
+        // A standalone recipe living directly under its own ## heading
+        // (no ### sub-block, unlike the day sections) — e.g. "Morning
+        // Wellness Shot (Optional — Make Once Per Week)". Open it here
+        // instead of waiting for an ### since none follows. Kept in the
+        // recurring/daily group (day_key null) since it isn't tied to one
+        // weekday, with a label suffix noting it's a weekly-batch item.
+        dayKey = null;
+        current = {
+          title: headingRaw.replace(/\s*\([^)]*\)\s*$/, "").trim(),
+          mealType: null,
+          frequencyNote: "weekly prep",
+          prepTime: null,
+          metaFields: [],
+          nutrition: {},
+          ingredientSets: [],
+          instructionSets: [],
+          note: null,
+        };
+      } else {
+        dayKey = "__skip__"; // summary table / anything else not otherwise recognized
+      }
       mode = null;
       continue;
     }
@@ -350,21 +387,42 @@ function parseMealRecipesNutrition(filePath, categoryId) {
         title: (m ? m[1] : heading).trim(),
         mealType: m ? m[2].toLowerCase() : null,
         prepTime: null,
-        servings: null,
+        metaFields: [],
         nutrition: {},
         ingredientSets: [],
         instructionSets: [],
+        note: null,
       };
       mode = null;
       continue;
     }
     if (!current) continue;
 
-    const prepLine = line.match(/^\*\*Prep time:\*\*\s*(.*?)(?:\s*\|\s*\*\*Serves:\*\*\s*(.*))?$/i);
-    if (prepLine) {
-      current.prepTime = prepLine[1].trim();
-      if (prepLine[2]) current.servings = prepLine[2].trim();
+    // Checked before the generic field-line parser below, since
+    // "**Note:**" would otherwise itself match "**Label:**" and clobber
+    // whatever metaFields were already captured (assignment there isn't
+    // additive — it's one line's fields at a time, and a recipe only has
+    // one such metadata line in practice).
+    const noteMatch = line.match(/^\*\*Note:?\*\*\s*(.*)/i);
+    if (noteMatch) {
+      current.note = noteMatch[1].trim();
       continue;
+    }
+
+    // Generic "**Label:** value | **Label2:** value2 | ..." line — covers
+    // "Prep time / Serves" on day recipes and "Prep time / Makes / Keeps"
+    // on the wellness shot alike, without hardcoding which labels appear.
+    if (/^\*\*[\w\s]+:\*\*/.test(line)) {
+      const fieldRe = /\*\*([\w\s]+):\*\*\s*([^|]+?)(?=\s*\||$)/g;
+      const fields = [];
+      let fm;
+      while ((fm = fieldRe.exec(line))) fields.push({ label: fm[1].trim(), value: fm[2].trim() });
+      if (fields.length) {
+        current.metaFields = fields;
+        const prep = fields.find((f) => /prep/i.test(f.label));
+        if (prep) current.prepTime = prep.value;
+        continue;
+      }
     }
 
     if (/^\*\*Nutrition Facts/i.test(line.trim())) {
