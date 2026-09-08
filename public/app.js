@@ -101,6 +101,7 @@ const state = {
   date: todayStr(),
   activeCategoryId: null,
   expandedTaskId: null,
+  collapsedGroups: new Set(),
   buildInfo: null,
 };
 
@@ -375,9 +376,19 @@ function renderCategoryView(category) {
 
   let html = renderDatePicker();
   for (const [dayKey, dayTasks] of groups) {
+    const groupKey = `${category.id}:${dayKey}`;
+    const collapsed = state.collapsedGroups.has(groupKey);
     html += `<div class="day-group">`;
-    if (groups.size > 1) html += `<h3>${escapeHtml(dayKey)}</h3>`;
-    html += dayTasks.map(renderTask).join("");
+    if (groups.size > 1) {
+      const isDaily = dayKey === "DAILY";
+      html += `
+        <button type="button" class="day-group-header" data-action="toggle-group" data-group-key="${escapeHtml(groupKey)}">
+          <span class="chevron ${collapsed ? "collapsed" : ""}">▾</span>
+          <span>${escapeHtml(dayKey)}${isDaily ? ' <span class="day-group-hint">— repeats every day</span>' : ""}</span>
+        </button>
+      `;
+    }
+    if (!collapsed) html += dayTasks.map(renderTask).join("");
     html += `</div>`;
   }
   return html || renderDatePicker() + `<div class="reference-note">Nothing scheduled for this system on this date.</div>`;
@@ -514,6 +525,15 @@ function render() {
   document.querySelectorAll('[data-action="expand"]').forEach((el) => {
     el.addEventListener("click", () => {
       state.expandedTaskId = state.expandedTaskId === el.dataset.taskId ? null : el.dataset.taskId;
+      render();
+    });
+  });
+
+  document.querySelectorAll('[data-action="toggle-group"]').forEach((el) => {
+    el.addEventListener("click", () => {
+      const key = el.dataset.groupKey;
+      if (state.collapsedGroups.has(key)) state.collapsedGroups.delete(key);
+      else state.collapsedGroups.add(key);
       render();
     });
   });

@@ -159,14 +159,42 @@ main {
   margin-bottom: 18px;
 }
 
-.day-group h3 {
-  font-size: 12px;
+.day-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
   color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-align: left;
   margin: 14px 0 8px;
+  padding: 8px 0 6px;
   border-bottom: 1px solid var(--panel-border);
-  padding-bottom: 6px;
+  min-height: 32px;
+}
+
+.day-group-header .chevron {
+  display: inline-block;
+  color: var(--accent);
+  transition: transform 0.15s ease;
+  font-size: 11px;
+}
+
+.day-group-header .chevron.collapsed {
+  transform: rotate(-90deg);
+}
+
+.day-group-hint {
+  color: var(--text-dim);
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 11px;
+  opacity: 0.75;
 }
 
 .task-row {
