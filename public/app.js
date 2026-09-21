@@ -1,9 +1,5 @@
-// MERIDIAN // OPS — frontend. Program-generic: tabs/categories render from
-// whatever the active program's data says, nothing here is hardcoded to
-// "week1" content.
-
-const XP_PER_EVENT = 10;
-const LEVELS = [0, 50, 150, 300, 500, 800, 1200, 1700, 2300, 3000, 4000, 5200, 6600];
+// SetLog — frontend. Program-generic: tabs/categories render from whatever
+// the active program's data says, nothing here is hardcoded to one program.
 
 // Hypermobility-aware exercise cue library. Keyword-matched against task
 // labels client-side (not MD-driven — these are general movement cues, not
@@ -24,8 +20,8 @@ const EXERCISE_LIBRARY = [
     ],
   },
   {
-    match: /overhead press/i,
-    title: "Overhead press",
+    match: /overhead press|shoulder press/i,
+    title: "Overhead / shoulder press",
     cues: [
       "Press in a slightly forward arc rather than straight up if straight-up ever feels unstable at the top — avoid locking the elbow out hard.",
       "Shoulder hypermobility guidance generally recommends building foundational shoulder-blade control and body awareness before loading overhead presses heavily — lighter weight, more control, is the right trade here.",
@@ -37,7 +33,7 @@ const EXERCISE_LIBRARY = [
     cues: [
       "Priority for hypermobile hips/knees is stability, not depth — don't chase extra range of motion just because the joint allows it.",
       "Drive attention into the deeper stabilizing muscles (glutes, deep hip rotators) rather than letting the joint itself hold the position passively.",
-      "A stable, non-give surface under your heels (like your squat wedges) matters more for hypermobile joints than for average mobility — it removes one variable the joint would otherwise have to compensate for.",
+      "Soft knee at the top of every rep — no locking out.",
     ],
   },
   {
@@ -49,15 +45,15 @@ const EXERCISE_LIBRARY = [
     ],
   },
   {
-    match: /push-?up/i,
-    title: "Push-up",
+    match: /push-?up|bench press|floor press/i,
+    title: "Press (bench / floor / push-up)",
     cues: [
       "Stop just short of full elbow lockout at the top of every rep — this is one of the most consistent joint-protection cues across hypermobility guidance.",
-      "An incline (hands elevated) reduces load on the shoulder and elbow versus a full floor push-up — a legitimate progression step, not a lesser version.",
+      "An incline or floor press reduces range and shoulder load versus a full bench press — a legitimate progression step, not a lesser version.",
     ],
   },
   {
-    match: /row|pull/i,
+    match: /row|pulldown|pull-?up/i,
     title: "Row / pulling",
     cues: [
       "Lead with the shoulder blade (squeeze it back/down) before the arm does the pulling — this keeps the load in the muscle rather than the joint capsule.",
@@ -65,24 +61,24 @@ const EXERCISE_LIBRARY = [
     ],
   },
   {
-    match: /lunge|split squat/i,
-    title: "Lunge / split squat",
+    match: /split squat|lunge/i,
+    title: "Split squat / lunge",
     cues: [
       "Limit how far forward the front knee travels — less forward knee travel means less end-range stress on a hypermobile knee.",
-      "A reverse-stepping pattern (stepping back instead of forward) is generally easier to balance and control for hypermobile knees than a forward walking lunge.",
+      "Soft knee at the bottom and top — never lock it out standing up.",
     ],
   },
   {
-    match: /glute bridge|hip thrust/i,
-    title: "Glute bridge / hip thrust",
+    match: /face pull/i,
+    title: "Face pulls",
     cues: [
-      "If you don't feel it in the glutes, that's a common hypermobility pattern (the joint moves, but a stabilizer isn't firing) — a band above the knees to push out against, plus a hard pause at the top, usually helps recruit the right muscle.",
+      "Pull to the face, elbows high — this trains the rear delts/rotator cuff that keep a hypermobile shoulder centered in the socket.",
     ],
   },
   {
-    match: /plank/i,
-    title: "Plank",
-    cues: ["Keep elbows soft, not locked, if on a straight-arm variation — avoid resting weight passively into a hyperextended elbow."],
+    match: /plank|deadbug/i,
+    title: "Core stability",
+    cues: ["Keep elbows/knees soft, not locked, on any straight-limb variation — avoid resting weight passively into a hyperextended joint."],
   },
 ];
 
@@ -97,7 +93,6 @@ const state = {
   completionsToday: new Set(),
   setLogsToday: [],
   activeDates: [],
-  xpEvents: 0,
   date: todayStr(),
   activeCategoryId: null,
   expandedTaskId: null,
@@ -109,18 +104,6 @@ const app = document.getElementById("app");
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
-}
-
-function levelFromXp(xp) {
-  let level = 1;
-  for (let i = 0; i < LEVELS.length; i++) {
-    if (xp >= LEVELS[i]) level = i + 1;
-  }
-  return level;
-}
-
-function xpForLevel(level) {
-  return LEVELS[level - 1] ?? LEVELS[LEVELS.length - 1];
 }
 
 function computeStreak() {
@@ -152,7 +135,7 @@ function renderPinScreen(error) {
   let entered = "";
   app.innerHTML = `
     <div class="pin-screen">
-      <div class="pin-title">MERIDIAN // OPS<span class="designation">ACCESS TERMINAL — ENTER CODE</span></div>
+      <div class="pin-title">SetLog<span class="designation">Enter your access code</span></div>
       <div class="pin-dots" id="pinDots"></div>
       <div class="pin-error" id="pinError">${error || ""}</div>
       <div class="keypad" id="keypad"></div>
@@ -181,7 +164,7 @@ function renderPinScreen(error) {
     } else if (key === "OK") {
       const res = await api("/api/login", { method: "POST", body: JSON.stringify({ pin: entered }) });
       if (res.ok) boot();
-      else renderPinScreen("ACCESS CODE REJECTED");
+      else renderPinScreen("Access code rejected");
       return;
     } else if (entered.length < 6) {
       entered += key;
@@ -190,55 +173,13 @@ function renderPinScreen(error) {
   });
 }
 
-// ---------- Mascot ----------
-// A small bonded lifeform the ship is keeping alive — its posture/glow
-// reflects your level. Not a hardcoded image: an inline SVG built per
-// level so it changes without new assets.
-function mascotSvg(level, pulseDone) {
-  const stage = Math.min(5, Math.max(1, Math.ceil(level / 3)));
-  const glow = ["#3a4a52", "#4fd1c5", "#4fd1c5", "#7ee8de", "#b6fff5"][stage - 1];
-  const eyeCount = Math.min(3, Math.ceil(stage / 2));
-  const antenna = stage >= 3;
-  const wings = stage >= 4;
-  const crown = stage >= 5;
-  const bodyHeight = 34 + stage * 4;
-
-  const eyes = Array.from({ length: eyeCount })
-    .map((_, i) => {
-      const cx = 50 + (i - (eyeCount - 1) / 2) * 12;
-      return `<circle cx="${cx}" cy="52" r="3.2" fill="#05070a" /><circle cx="${cx}" cy="51" r="1" fill="${glow}" />`;
-    })
-    .join("");
-
-  return `
-    <svg viewBox="0 0 100 100" width="120" height="120" class="mascot-svg ${pulseDone ? "pulse" : ""}" role="img" aria-label="Specimen status, level ${level}">
-      ${antenna ? `<line x1="50" y1="${60 - bodyHeight / 2}" x2="50" y2="${60 - bodyHeight / 2 - 10}" stroke="${glow}" stroke-width="1.5"/><circle cx="50" cy="${60 - bodyHeight / 2 - 12}" r="3" fill="${glow}"/>` : ""}
-      ${wings ? `<ellipse cx="26" cy="58" rx="10" ry="16" fill="${glow}" opacity="0.35" transform="rotate(-20 26 58)"/><ellipse cx="74" cy="58" rx="10" ry="16" fill="${glow}" opacity="0.35" transform="rotate(20 74 58)"/>` : ""}
-      <ellipse cx="50" cy="60" rx="26" ry="${bodyHeight / 2}" fill="#0c1016" stroke="${glow}" stroke-width="2"/>
-      <ellipse cx="50" cy="60" rx="26" ry="${bodyHeight / 2}" fill="${glow}" opacity="0.08"/>
-      ${eyes}
-      ${crown ? `<path d="M38 ${60 - bodyHeight / 2} L42 ${60 - bodyHeight / 2 - 8} L50 ${60 - bodyHeight / 2} L58 ${60 - bodyHeight / 2 - 8} L62 ${60 - bodyHeight / 2}" fill="none" stroke="${glow}" stroke-width="2"/>` : ""}
-    </svg>
-  `;
-}
-
-const MASCOT_LINES = [
-  "Vitals nominal. Barely.",
-  "Specimen shows early stabilization.",
-  "Bioreadings trending upward.",
-  "Specimen is adapting well to the routine.",
-  "Strong signal. Whatever you're doing, continue it.",
-];
-
 // ---------- Category rendering ----------
 const WEEKDAY_ABBR = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const WEEKDAY_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-// day_key shows up in two shapes depending on the source MD's layout —
-// a short abbreviation ("Mon") for meals, or a full descriptive heading
-// ("Day 1 (Tuesday) — Upper Body") for training — so match against both
-// forms rather than assuming one. A null day_key means "recurring daily",
-// which always matches regardless of the selected date.
+// day_key holds a full descriptive heading ("Day 1 (Monday) — Upper A") for
+// training, or is null for a recurring/daily task — matched against the
+// selected date's weekday name rather than assuming a fixed shape.
 function taskMatchesDate(task, dateStr) {
   if (!task.day_key) return true;
   const d = new Date(dateStr + "T00:00:00");
@@ -263,70 +204,17 @@ function groupTasksByDay(tasks) {
 
 function renderChecklistTask(task) {
   const checked = state.completionsToday.has(task.id);
-  const recipe = task.meta && task.meta.recipe;
-  // Only meal tasks carry recipe data — a Sleep/Hydration/steps-target
-  // task tapped for "detail" would otherwise show a confusing "no recipe
-  // on file" panel, so those simply aren't expandable (their full text is
-  // already shown inline via task.detail).
-  const expanded = recipe && state.expandedTaskId === task.id;
   return `
-    <div class="task-row" data-task-id="${task.id}">
-      <div class="task-check ${checked ? "checked" : ""}" data-action="toggle" data-task-id="${task.id}">${checked ? "✓" : ""}</div>
-      <div class="task-body" ${recipe ? `data-action="expand" data-task-id="${task.id}"` : ""}>
-        <div class="task-label ${checked ? "checked" : ""}">${escapeHtml(task.label)}</div>
-        ${task.detail ? `<div class="task-detail">${escapeHtml(task.detail)}</div>` : ""}
+    <div class="exercise-card ${checked ? "is-done" : ""}" data-task-id="${task.id}">
+      <div class="exercise-main">
+        <div class="exercise-info" data-action="toggle" data-task-id="${task.id}">
+          <div class="exercise-name">${escapeHtml(task.label)}</div>
+          ${task.detail ? `<div class="exercise-meta"><span class="meta-chip">${escapeHtml(task.detail)}</span></div>` : ""}
+        </div>
+        <div class="exercise-status" data-action="toggle" data-task-id="${task.id}">
+          <span class="set-count ${checked ? "" : "pending"}">${checked ? "Done" : "Mark"}</span>
+        </div>
       </div>
-    </div>
-    ${expanded ? renderRecipeExpand(recipe) : ""}
-  `;
-}
-
-const NUTRITION_ORDER = ["Calories", "Protein", "Fat", "Carbs", "Fiber"];
-
-function renderNutritionFacts(nutrition) {
-  if (!nutrition) return "";
-  const keys = NUTRITION_ORDER.filter((k) => nutrition[k]).concat(
-    Object.keys(nutrition).filter((k) => !NUTRITION_ORDER.includes(k))
-  );
-  if (!keys.length) return "";
-  return `
-    <div class="expand-subhead">Nutrition facts${nutrition.__note ? ` (${escapeHtml(nutrition.__note)})` : ""}</div>
-    <div class="nutrition-row">
-      ${keys.map((k) => `<div class="nutrition-chip"><strong>${escapeHtml(nutrition[k])}</strong><span>${escapeHtml(k)}</span></div>`).join("")}
-    </div>
-  `;
-}
-
-function renderRecipeExpand(recipe) {
-  if (!recipe) return `<div class="expand-panel"><div class="reference-note">No recipe on file for this one.</div></div>`;
-
-  // Two shapes come through here: the older {ingredients, steps} arrays
-  // (from the "meal-plan" layout) and the richer {nutrition, ingredientSets,
-  // instructionSets, metaFields, note} shape (from "meal-recipes-nutrition").
-  // Normalize both to sets so rendering is one path.
-  const ingredientSets = recipe.ingredientSets || (recipe.ingredients ? [{ label: null, items: recipe.ingredients }] : []);
-  const instructionSets = recipe.instructionSets || (recipe.steps ? [{ label: null, steps: recipe.steps }] : []);
-
-  const metaLine = recipe.metaFields && recipe.metaFields.length
-    ? recipe.metaFields.map((f) => `${f.label}: ${f.value}`).join(" · ")
-    : [recipe.prepTime ? `Prep: ${recipe.prepTime}` : "", recipe.servings ? `Serves: ${recipe.servings}` : ""]
-        .filter(Boolean)
-        .join(" · ");
-
-  return `
-    <div class="expand-panel">
-      <div class="expand-title">${escapeHtml(recipe.title)}</div>
-      ${metaLine ? `<div class="recipe-meta">${escapeHtml(metaLine)}</div>` : ""}
-      ${renderNutritionFacts(recipe.nutrition)}
-      ${ingredientSets.map((set) => `
-        <div class="expand-subhead">${set.label ? escapeHtml(set.label) : "Ingredients"}</div>
-        <ul class="expand-list">${set.items.map((i) => `<li>${escapeHtml(i)}</li>`).join("")}</ul>
-      `).join("")}
-      ${instructionSets.map((set) => `
-        <div class="expand-subhead">${set.label ? escapeHtml(set.label) : "Steps"}</div>
-        <ol class="expand-list">${set.steps.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ol>
-      `).join("")}
-      ${recipe.note ? `<div class="reference-note">${escapeHtml(recipe.note)}</div>` : ""}
     </div>
   `;
 }
@@ -336,17 +224,26 @@ function renderSetsTask(task) {
   const done = logs.length > 0;
   const expanded = state.expandedTaskId === task.id;
   const target = task.meta && task.meta.targetText;
+  const equipment = task.meta && task.meta.equipment;
   const cues = findExerciseCues(task.label);
 
   return `
-    <div class="task-row" data-task-id="${task.id}">
-      <div class="task-check ${done ? "checked" : ""}">${done ? logs.length : ""}</div>
-      <div class="task-body" data-action="expand" data-task-id="${task.id}">
-        <div class="task-label ${done ? "checked" : ""}">${escapeHtml(task.label)}</div>
-        <div class="task-detail">${target ? escapeHtml(target) + (task.detail ? " — " : "") : ""}${task.detail ? escapeHtml(task.detail) : ""}</div>
+    <div class="exercise-card ${done ? "is-done" : ""}" data-task-id="${task.id}">
+      <div class="exercise-main" data-action="expand" data-task-id="${task.id}">
+        <div class="exercise-info">
+          <div class="exercise-name">${escapeHtml(task.label)}</div>
+          <div class="exercise-meta">
+            ${target ? `<span class="meta-chip">${escapeHtml(target)}</span>` : ""}
+            ${task.detail ? `<span class="meta-chip">${escapeHtml(task.detail)}</span>` : ""}
+            ${equipment ? `<span class="meta-chip equipment">${escapeHtml(equipment)}</span>` : ""}
+          </div>
+        </div>
+        <div class="exercise-status">
+          <span class="set-count ${done ? "" : "pending"}">${done ? `${logs.length} set${logs.length > 1 ? "s" : ""}` : "—"}</span>
+        </div>
       </div>
+      ${expanded ? renderSetsExpand(task, logs, cues) : ""}
     </div>
-    ${expanded ? renderSetsExpand(task, logs, cues) : ""}
   `;
 }
 
@@ -354,7 +251,7 @@ function renderSetsExpand(task, logs, cues) {
   return `
     <div class="expand-panel">
       ${cues ? `
-        <div class="expand-title">${escapeHtml(cues.title)} — reference</div>
+        <div class="expand-title">${escapeHtml(cues.title)} — form cue</div>
         ${cues.caution ? `<div class="caution-note">${escapeHtml(cues.caution)}</div>` : ""}
         <ul class="expand-list">${cues.cues.map((c) => `<li>${escapeHtml(c)}</li>`).join("")}</ul>
       ` : ""}
@@ -378,21 +275,47 @@ function renderSetsExpand(task, logs, cues) {
   `;
 }
 
-// A task's own meta.kind (e.g. "checkbox" on an otherwise sets-kind
-// category's single daily-target task) wins over its category's default —
-// lets a mostly-sets category like Propulsion carry one plain checklist
-// item (daily steps) without needing a whole separate category for it.
+function renderReferenceBody(detail) {
+  if (!detail) return "";
+  const parts = detail.split(" · ").map((s) => s.trim()).filter(Boolean);
+  if (parts.length <= 1) return `<p>${escapeHtml(detail)}</p>`;
+  const [intro, ...rest] = parts;
+  return `<p>${escapeHtml(intro)}</p><ul>${rest.map((p) => `<li>${escapeHtml(p)}</li>`).join("")}</ul>`;
+}
+
+function renderReferenceTask(task) {
+  const expanded = state.expandedTaskId === task.id;
+  return `
+    <div class="reference-card">
+      <button type="button" class="reference-header" data-action="expand" data-task-id="${task.id}">
+        <span>${escapeHtml(task.label)}</span>
+        <span class="chevron ${expanded ? "" : "collapsed"}">▾</span>
+      </button>
+      ${expanded ? `<div class="reference-body">${renderReferenceBody(task.detail)}</div>` : ""}
+    </div>
+  `;
+}
+
+// A task's own meta.kind wins over its category's default kind, letting one
+// category carry a mixed set of task types without needing a whole separate
+// category for it.
 function taskKind(task, category) {
   return (task.meta && task.meta.kind) || category.kind;
+}
+
+function renderTaskByKind(task, category) {
+  const kind = taskKind(task, category);
+  if (kind === "sets") return renderSetsTask(task);
+  if (kind === "reference") return renderReferenceTask(task);
+  return renderChecklistTask(task);
 }
 
 function renderCategoryView(category) {
   const tasks = tasksForCategoryOnDate(category.id, state.date);
   const groups = groupTasksByDay(tasks);
-  const renderTask = (task) =>
-    taskKind(task, category) === "sets" ? renderSetsTask(task) : renderChecklistTask(task);
+  const showDateBar = category.kind !== "reference";
 
-  let html = renderDatePicker();
+  let html = showDateBar ? renderDatePicker() : "";
   for (const [dayKey, dayTasks] of groups) {
     const groupKey = `${category.id}:${dayKey}`;
     const collapsed = state.collapsedGroups.has(groupKey);
@@ -402,14 +325,14 @@ function renderCategoryView(category) {
       html += `
         <button type="button" class="day-group-header" data-action="toggle-group" data-group-key="${escapeHtml(groupKey)}">
           <span class="chevron ${collapsed ? "collapsed" : ""}">▾</span>
-          <span>${escapeHtml(dayKey)}${isDaily ? ' <span class="day-group-hint">— repeats every day</span>' : ""}</span>
+          <span>${escapeHtml(dayKey)}${isDaily ? ' <span class="day-group-hint">— always shown</span>' : ""}</span>
         </button>
       `;
     }
-    if (!collapsed) html += dayTasks.map(renderTask).join("");
+    if (!collapsed) html += dayTasks.map((t) => renderTaskByKind(t, category)).join("");
     html += `</div>`;
   }
-  return html || renderDatePicker() + `<div class="reference-note">Nothing scheduled for this system on this date.</div>`;
+  return html || (showDateBar ? renderDatePicker() : "") + `<div class="reference-note">Nothing scheduled here for this date.</div>`;
 }
 
 function renderDatePicker() {
@@ -423,39 +346,46 @@ function renderDatePicker() {
 }
 
 function renderHome() {
-  const totalXp = state.xpEvents * XP_PER_EVENT;
-  const level = levelFromXp(totalXp);
   const streak = computeStreak();
-  const todayTasks = state.categories.flatMap((c) => tasksForCategoryOnDate(c.id, state.date));
-  const todayTotal = todayTasks.length;
-  const todayDoneCount =
-    state.completionsToday.size + new Set(state.setLogsToday.map((l) => l.task_id)).size;
-  const thisLevelFloor = xpForLevel(level);
-  const nextLevelXp = xpForLevel(level + 1);
-  const pct = nextLevelXp > thisLevelFloor
-    ? Math.min(100, Math.round(((totalXp - thisLevelFloor) / (nextLevelXp - thisLevelFloor)) * 100))
-    : 100;
+  const trainingCategories = state.categories.filter((c) => c.kind === "sets");
+  const todayTrainingTasks = trainingCategories.flatMap((c) => tasksForCategoryOnDate(c.id, state.date));
+  const loggedTaskIds = new Set(state.setLogsToday.map((l) => l.task_id));
+  const todayLoggedCount = todayTrainingTasks.filter((t) => loggedTaskIds.has(t.id)).length;
+  const todayTotal = todayTrainingTasks.length;
+  const pct = todayTotal ? Math.round((todayLoggedCount / todayTotal) * 100) : 0;
+  const isToday = state.date === todayStr();
+
+  const dayLabel = todayTrainingTasks.length
+    ? [...new Set(todayTrainingTasks.map((t) => t.day_key))][0]
+    : null;
 
   return `
-    <div class="mascot-panel">
-      ${mascotSvg(level)}
-      <div class="mascot-line">${escapeHtml(MASCOT_LINES[Math.min(MASCOT_LINES.length - 1, Math.ceil(level / 3) - 1)] || MASCOT_LINES[0])}</div>
-      <div class="xp-bar"><div class="xp-fill" style="width:${pct}%"></div></div>
-      <div class="xp-label">LEVEL ${level} — ${totalXp} XP ${nextLevelXp ? `(${nextLevelXp - totalXp} to next)` : ""}</div>
-    </div>
-    <div class="reference-note">
-      SHIP: ${escapeHtml(state.program.name)}<br/>
-      REGISTER: ${escapeHtml(state.program.theme_concept)}
+    <div class="home-hero">
+      <div class="home-date">${isToday ? "Today" : escapeHtml(state.date)}</div>
+      <div class="home-subline">${dayLabel ? escapeHtml(dayLabel) : "No workout scheduled for this date"}</div>
+      ${todayTotal ? `
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="home-subline">${todayLoggedCount}/${todayTotal} exercises logged</div>
+      ` : ""}
     </div>
     <div class="stat-row">
-      <div class="stat-chip">STREAK<strong>${streak}d</strong></div>
-      <div class="stat-chip">TODAY<strong>${todayDoneCount}/${state.categories.length ? todayTotal : 0}</strong></div>
+      <div class="stat-chip">Streak<strong class="accent">${streak}d</strong></div>
+      <div class="stat-chip">Program<strong>${escapeHtml(state.program.name.replace(/^\d+-Day\s*/, ""))}</strong></div>
     </div>
-    <div class="day-group">
-      <h3>Systems</h3>
+    <div class="section-heading">Sections</div>
+    <div class="category-list">
       ${state.categories
         .map((c) => {
           const catTasks = tasksForCategoryOnDate(c.id, state.date);
+          if (c.kind === "reference") {
+            return `<div class="category-card" data-goto="${c.id}">
+              <div>
+                <div class="cat-label">${escapeHtml(c.label)}</div>
+                <div class="cat-sub">${catTasks.length} reference topic${catTasks.length === 1 ? "" : "s"}</div>
+              </div>
+              <div class="cat-count">›</div>
+            </div>`;
+          }
           const setsTaskIds = new Set(catTasks.filter((t) => taskKind(t, c) === "sets").map((t) => t.id));
           const loggedSetsDone = new Set(
             state.setLogsToday.filter((l) => setsTaskIds.has(l.task_id)).map((l) => l.task_id)
@@ -464,11 +394,12 @@ function renderHome() {
             (t) => taskKind(t, c) !== "sets" && state.completionsToday.has(t.id)
           ).length;
           const done = loggedSetsDone + checkboxDone;
-          return `<div class="task-row" data-goto="${c.id}">
-            <div class="task-body">
-              <div class="task-label">${escapeHtml(c.label)}</div>
-              <div class="task-detail">${done}/${catTasks.length} cleared today</div>
+          return `<div class="category-card" data-goto="${c.id}">
+            <div>
+              <div class="cat-label">${escapeHtml(c.label)}</div>
+              <div class="cat-sub">${catTasks.length ? `${done}/${catTasks.length} logged today` : "Nothing scheduled today"}</div>
             </div>
+            <div class="cat-count ${done && done === catTasks.length ? "accent" : ""}">${catTasks.length ? `${done}/${catTasks.length}` : ""}</div>
           </div>`;
         })
         .join("")}
@@ -496,20 +427,20 @@ async function loadBuildInfo() {
 }
 
 function render() {
-  const tabs = [{ id: "home", label: "OVERVIEW" }, ...state.categories.map((c) => ({ id: c.id, label: c.label }))];
+  const tabs = [{ id: "home", label: "Today" }, ...state.categories.map((c) => ({ id: c.id, label: c.label }))];
   const active = state.activeCategoryId || "home";
   const activeCategory = state.categories.find((c) => c.id === active);
 
   app.innerHTML = `
     <header class="topbar">
-      <div class="ship-line">MERIDIAN // OPS</div>
+      <div class="brand-line">SetLog</div>
       <div class="program-name">${escapeHtml(state.program.name)}</div>
     </header>
     <main id="main"></main>
     <div class="bottom-bar">
       <div class="build-footer">
         <span>${formatBuildInfo()}</span>
-        <button type="button" id="forceRefreshBtn" title="Force refresh — pulls the latest deployed version">⟳ REFRESH</button>
+        <button type="button" id="forceRefreshBtn" title="Force refresh — pulls the latest deployed version">⟳ Refresh</button>
       </div>
       <nav class="tabbar">
         ${tabs.map((t) => `<button data-tab="${t.id}" class="${t.id === active ? "active" : ""}">${escapeHtml(t.label)}</button>`).join("")}
@@ -606,10 +537,8 @@ async function toggleTask(taskId) {
   if (nowChecked) {
     state.completionsToday.add(taskId);
     if (!state.activeDates.includes(state.date)) state.activeDates.push(state.date);
-    state.xpEvents += 1;
   } else {
     state.completionsToday.delete(taskId);
-    state.xpEvents = Math.max(0, state.xpEvents - 1);
   }
   render();
   await api("/api/toggle", {
@@ -619,21 +548,11 @@ async function toggleTask(taskId) {
 }
 
 async function logSet(taskId, weight, reps) {
-  const res = await api("/api/log-set", {
+  await api("/api/log-set", {
     method: "POST",
     body: JSON.stringify({ taskId, date: state.date, weight, reps }),
   });
-  const data = await res.json();
-  state.setLogsToday.push({
-    id: data.setNumber ? `pending-${Date.now()}` : undefined,
-    task_id: taskId,
-    date: state.date,
-    set_number: data.setNumber,
-    weight,
-    reps,
-  });
   if (!state.activeDates.includes(state.date)) state.activeDates.push(state.date);
-  state.xpEvents += 1;
   await loadDay(true);
 }
 
@@ -655,7 +574,6 @@ async function loadDay(keepExpanded) {
   state.completionsToday = new Set(data.completionsToday);
   state.setLogsToday = data.setLogsToday;
   state.activeDates = data.activeDates;
-  state.xpEvents = data.xpEvents;
   if (!keepExpanded) state.expandedTaskId = null;
   render();
 }

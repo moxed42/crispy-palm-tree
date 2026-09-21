@@ -2,7 +2,7 @@
   "id": "week1",
   "name": "Transit Cycle 01",
   "theme_concept": "MERIDIAN // OPS — long-haul transit vessel systems terminal",
-  "active": true,
+  "active": false,
   "categories": [
     {
       "id": "propulsion",

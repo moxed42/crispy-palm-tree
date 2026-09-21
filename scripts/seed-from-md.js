@@ -5,9 +5,11 @@
 // program.json declares one entry per category: { id, label, kind, source,
 // layout }. `layout` picks which parser below handles that file:
 //   - "day-headings": "## Day N (Weekday) — ..." sections, each a markdown
-//     table of exercises. Used for the training plan. `kind: "sets"`
-//     categories store the "Sets x Reps" column as structured meta instead
-//     of folding it into detail, since the frontend needs it separately.
+//     table of exercises (Exercise | Sets x Reps | Weight | Equipment — the
+//     last column is optional). Used for the training plan. `kind: "sets"`
+//     categories store the "Sets x Reps" and "Equipment" columns as
+//     structured meta instead of folding them into detail, since the
+//     frontend needs them separately.
 //   - "simple-table": one flat markdown table, no day sections (e.g. the
 //     supplement schedule).
 //   - "meal-plan": the specific two-part shape of the original meal plan
@@ -137,9 +139,9 @@ function parseDayHeadings(filePath, categoryId, kind) {
       tableHeader = cells;
       continue;
     }
-    const [label, setsReps, notes] = cells;
+    const [label, setsReps, notes, equipment] = cells;
     if (!label) continue;
-    const meta = kind === "sets" && setsReps ? { targetText: setsReps } : null;
+    const meta = kind === "sets" && setsReps ? { targetText: setsReps, equipment: equipment || null } : null;
     tasks.push({
       id: makeStableId(categoryId, dayKey, label, seenIds),
       categoryId,
