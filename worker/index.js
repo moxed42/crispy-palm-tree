@@ -1,7 +1,7 @@
-// MERIDIAN // OPS — Worker: PIN auth + progress API backed by D1.
+// SetLog — Worker: PIN auth + progress API backed by D1.
 // Secrets: PIN (numeric access code) must be set with `wrangler secret put PIN`.
 
-const SESSION_COOKIE = "meridian_session";
+const SESSION_COOKIE = "setlog_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 function json(data, init = {}) {
@@ -105,21 +105,6 @@ async function handleGetDay(request, env, date) {
   )
     .bind(program.id)
     .all();
-  const totalCompletions = await env.DB.prepare(
-    `SELECT COUNT(*) as n FROM completions WHERE task_id IN (
-       SELECT t.id FROM tasks t JOIN categories c ON t.category_id = c.id WHERE c.program_id = ?
-     )`
-  )
-    .bind(program.id)
-    .first();
-  const totalSetLogs = await env.DB.prepare(
-    `SELECT COUNT(*) as n FROM set_logs WHERE task_id IN (
-       SELECT t.id FROM tasks t JOIN categories c ON t.category_id = c.id WHERE c.program_id = ?
-     )`
-  )
-    .bind(program.id)
-    .first();
-
   const activeDates = new Set([
     ...completionDates.results.map((r) => r.date),
     ...setLogDates.results.map((r) => r.date),
@@ -133,7 +118,6 @@ async function handleGetDay(request, env, date) {
     completionsToday: completionsToday.results.map((r) => r.task_id),
     setLogsToday: setLogsToday.results,
     activeDates: Array.from(activeDates),
-    xpEvents: (totalCompletions.n || 0) + (totalSetLogs.n || 0),
   });
 }
 
