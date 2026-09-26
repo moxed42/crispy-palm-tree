@@ -24,7 +24,7 @@ date, but shift the actual weekdays around your week as needed.
 | Barbell Box Squat | 3x10 | 45-50 lb | Barbell |
 | RDL | 3x8 | 60-65 lb | Barbell |
 | DB Split Squat | 3x8/leg | 25 lb | Dumbbell |
-| Calf Press | 3x12 | 24 lb | Machine |
+| Standing DB Calf Raise | 3x12 | 20-25 lb/hand | Dumbbell |
 | Tib Raises | 2x12 | 10 lb | Plate |
 | Deadbugs | 3x12/side | bodyweight | Bodyweight |
 
@@ -45,5 +45,5 @@ date, but shift the actual weekdays around your week as needed.
 | RDL | 3x10 | 55-60 lb | Barbell |
 | DB Split Squat | 3x8/leg | 25-30 lb | Dumbbell |
 | Barbell Box Squat (lighter, higher rep) | 3x12 | 40 lb | Barbell |
-| Calf Press | 3x15 | 24 lb | Machine |
+| Standing DB Calf Raise | 3x15 | 20-25 lb/hand | Dumbbell |
 | Deadbugs | 3x12/side | bodyweight | Bodyweight |
