@@ -1,6 +1,6 @@
--- MERIDIAN // OPS — schema
--- Programs are the top-level "glow-up tracks" (this week's plan is one program;
--- future hobbies/programs are added as new rows, never new tables).
+-- SetLog — schema
+-- Programs are the top-level training plans (the active hypertrophy program
+-- is one row; a future program is added as a new row, never a new table).
 
 CREATE TABLE IF NOT EXISTS programs (
   id TEXT PRIMARY KEY,
