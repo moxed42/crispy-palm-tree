@@ -95,6 +95,7 @@ const state = {
   activeDates: [],
   date: todayStr(),
   activeCategoryId: null,
+  selectedDayKey: null, // null = date-driven ("Auto"); a specific day_key pins the view regardless of date
   expandedTaskId: null,
   collapsedGroups: new Set(),
   buildInfo: null,
@@ -190,6 +191,24 @@ function taskMatchesDate(task, dateStr) {
 
 function tasksForCategoryOnDate(categoryId, dateStr) {
   return state.tasks.filter((t) => t.category_id === categoryId && taskMatchesDate(t, dateStr));
+}
+
+// Distinct day_keys for a category, in program order (dedup, excludes the
+// null/recurring group) — used to build the "jump to a workout regardless
+// of date" picker.
+function dayKeysForCategory(categoryId) {
+  const seen = [];
+  for (const t of state.tasks) {
+    if (t.category_id === categoryId && t.day_key && !seen.includes(t.day_key)) seen.push(t.day_key);
+  }
+  return seen;
+}
+
+// day_key is a full heading like "Day 1 (Monday) — Upper A" — the picker
+// only needs the short "Upper A" part after the dash.
+function shortDayLabel(dayKey) {
+  const parts = dayKey.split("—");
+  return (parts.length > 1 ? parts[1] : dayKey).trim();
 }
 
 function groupTasksByDay(tasks) {
@@ -311,11 +330,15 @@ function renderTaskByKind(task, category) {
 }
 
 function renderCategoryView(category) {
-  const tasks = tasksForCategoryOnDate(category.id, state.date);
+  const dayKeys = category.kind === "sets" ? dayKeysForCategory(category.id) : [];
+  const tasks = state.selectedDayKey
+    ? state.tasks.filter((t) => t.category_id === category.id && t.day_key === state.selectedDayKey)
+    : tasksForCategoryOnDate(category.id, state.date);
   const groups = groupTasksByDay(tasks);
   const showDateBar = category.kind !== "reference";
 
-  let html = showDateBar ? renderDatePicker() : "";
+  let html = dayKeys.length > 1 ? renderDaySelector(dayKeys) : "";
+  html += showDateBar ? renderDatePicker() : "";
   for (const [dayKey, dayTasks] of groups) {
     const groupKey = `${category.id}:${dayKey}`;
     const collapsed = state.collapsedGroups.has(groupKey);
@@ -332,7 +355,21 @@ function renderCategoryView(category) {
     if (!collapsed) html += dayTasks.map((t) => renderTaskByKind(t, category)).join("");
     html += `</div>`;
   }
-  return html || (showDateBar ? renderDatePicker() : "") + `<div class="reference-note">Nothing scheduled here for this date.</div>`;
+  if (groups.size === 0) html += `<div class="reference-note">Nothing scheduled here for this date.</div>`;
+  return html;
+}
+
+function renderDaySelector(dayKeys) {
+  const chips = [{ key: null, label: "Auto" }, ...dayKeys.map((k) => ({ key: k, label: shortDayLabel(k) }))];
+  return `
+    <div class="day-selector">
+      ${chips
+        .map(
+          (c) => `<button type="button" class="day-chip ${state.selectedDayKey === c.key ? "active" : ""}" data-action="select-day" data-day-key="${escapeHtml(c.key || "")}">${escapeHtml(c.label)}</button>`
+        )
+        .join("")}
+    </div>
+  `;
 }
 
 function renderDatePicker() {
@@ -458,6 +495,7 @@ function render() {
     btn.addEventListener("click", () => {
       state.activeCategoryId = btn.dataset.tab;
       state.expandedTaskId = null;
+      state.selectedDayKey = null;
       render();
     });
   });
@@ -465,6 +503,15 @@ function render() {
   document.querySelectorAll("[data-goto]").forEach((el) => {
     el.addEventListener("click", () => {
       state.activeCategoryId = el.dataset.goto;
+      state.selectedDayKey = null;
+      render();
+    });
+  });
+
+  document.querySelectorAll('[data-action="select-day"]').forEach((el) => {
+    el.addEventListener("click", () => {
+      state.selectedDayKey = el.dataset.dayKey || null;
+      state.expandedTaskId = null;
       render();
     });
   });
