@@ -117,8 +117,26 @@ program's seed to D1, so it's always safe to re-run even without changes.
 
 **One thing to set up once for this to work:** add `CLOUDFLARE_API_TOKEN`
 and `CLOUDFLARE_ACCOUNT_ID` as repo secrets (Settings → Secrets and
-variables → Actions) — the token needs D1 edit permission. Without these
+variables → Actions) — the token needs **D1 Edit** permission. Without these
 the Action will fail at the "Apply each program's seed to D1" step.
+
+## Deploying code changes automatically
+
+A separate workflow, `.github/workflows/deploy.yml`, runs `npm run deploy`
+automatically whenever `public/`, `worker/`, `wrangler.toml`, or
+`package.json` change on `main` — so a frontend/backend code change (not
+just program content) goes live without needing to run `npm run deploy`
+by hand. It reuses the same `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`
+secrets as the content-sync workflow above, but that token needs **Workers
+Scripts: Edit** permission too (not just D1 Edit) for this one to succeed —
+widen the existing token's permissions at
+[dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens)
+rather than creating a second token, unless you'd rather keep them scoped
+separately (in which case, give the deploy workflow its own secret and
+update its `env:` block to reference it).
+
+You can still run `npm run deploy` locally any time — the two aren't
+mutually exclusive, this workflow just means you don't have to.
 
 To add a whole new training block later (e.g. a new phase or split):
 create `programs/<new-id>/` with its MD files and a `program.json` manifest
