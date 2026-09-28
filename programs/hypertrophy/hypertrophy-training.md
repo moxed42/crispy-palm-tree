@@ -27,6 +27,7 @@ date, but shift the actual weekdays around your week as needed.
 | DB Split Squat | 3x8/leg | 25 lb | Dumbbell |
 | Standing DB Calf Raise | 3x12 | 20-25 lb/hand | Dumbbell |
 | Tib Raises | 2x12 | 10 lb | Plate |
+| Balance Board — Directional Tilts (Fwd/Back/Side-Side) | 2x8-10 tilts/direction | bodyweight | Balance Board |
 | Balance Board — Single-Leg Hold | 2x30-45 sec/leg | bodyweight | Balance Board |
 | Deadbugs | 3x12/side | bodyweight | Bodyweight |
 
@@ -49,5 +50,6 @@ date, but shift the actual weekdays around your week as needed.
 | DB Split Squat | 3x8/leg | 25-30 lb | Dumbbell |
 | Barbell Box Squat (lighter, higher rep) | 3x12 | 40 lb | Barbell |
 | Standing DB Calf Raise | 3x15 | 20-25 lb/hand | Dumbbell |
+| Balance Board — Directional Tilts (Fwd/Back/Side-Side) | 2x8-10 tilts/direction | bodyweight | Balance Board |
 | Balance Board — Single-Leg Hold | 2x30-45 sec/leg | bodyweight | Balance Board |
 | Deadbugs | 3x12/side | bodyweight | Bodyweight |

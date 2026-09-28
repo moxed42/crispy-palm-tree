@@ -96,6 +96,7 @@ const EXERCISE_LIBRARY = [
     title: "Balance board / ankle work",
     cues: [
       "Priority is stability and control, not how long you can wobble — the same hypermobility principle as squats: don't chase extra range, build the stabilizers that hold the joint still.",
+      "On the directional tilts, move slowly and stop the tilt under control before it maxes out — the goal is controlling the ankle through the motion, not seeing how far it goes.",
       "Stand near a wall or sturdy surface you can touch for support, especially early on — there's no benefit to falling off to prove balance.",
       "Keep a soft knee and stack hip-knee-ankle rather than letting the knee cave in — that alignment matters more on an unstable surface than a stable one.",
     ],
