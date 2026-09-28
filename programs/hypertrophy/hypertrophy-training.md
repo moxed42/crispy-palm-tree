@@ -21,7 +21,7 @@ guessed a month in advance.
 ## Day 1 (2026-09-28 Mon) — Upper A
 | Exercise | Sets x Reps | Weight | Equipment |
 |---|---|---|---|
-| DB Bench Press | 3x10 | 30-35 lb/hand | Dumbbell |
+| DB Floor Press | 3x10 | 30-35 lb/hand | Dumbbell |
 | Incline DB Press | 2x10 | 22-25 lb/hand | Dumbbell |
 | DB Row | 3x10 | 17-18 lb | Dumbbell |
 | Lat Pulldown | 3x12 | 40 lb | Cable |
@@ -69,7 +69,7 @@ guessed a month in advance.
 ## Day 5 (2026-10-05 Mon) — Upper A
 | Exercise | Sets x Reps | Weight | Equipment |
 |---|---|---|---|
-| DB Bench Press | 3x10 | 30-35 lb/hand | Dumbbell |
+| DB Floor Press | 3x10 | 30-35 lb/hand | Dumbbell |
 | Incline DB Press | 2x10 | 22-25 lb/hand | Dumbbell |
 | DB Row | 3x10 | 17-18 lb | Dumbbell |
 | Lat Pulldown | 3x12 | 40 lb | Cable |
@@ -117,7 +117,7 @@ guessed a month in advance.
 ## Day 9 (2026-10-12 Mon) — Upper A
 | Exercise | Sets x Reps | Weight | Equipment |
 |---|---|---|---|
-| DB Bench Press | 3x10 | 30-35 lb/hand | Dumbbell |
+| DB Floor Press | 3x10 | 30-35 lb/hand | Dumbbell |
 | Incline DB Press | 2x10 | 22-25 lb/hand | Dumbbell |
 | DB Row | 3x10 | 17-18 lb | Dumbbell |
 | Lat Pulldown | 3x12 | 40 lb | Cable |
@@ -165,7 +165,7 @@ guessed a month in advance.
 ## Day 13 (2026-10-19 Mon) — Upper A
 | Exercise | Sets x Reps | Weight | Equipment |
 |---|---|---|---|
-| DB Bench Press | 3x10 | 30-35 lb/hand | Dumbbell |
+| DB Floor Press | 3x10 | 30-35 lb/hand | Dumbbell |
 | Incline DB Press | 2x10 | 22-25 lb/hand | Dumbbell |
 | DB Row | 3x10 | 17-18 lb | Dumbbell |
 | Lat Pulldown | 3x12 | 40 lb | Cable |
@@ -213,7 +213,7 @@ guessed a month in advance.
 ## Day 17 (2026-10-26 Mon) — Upper A
 | Exercise | Sets x Reps | Weight | Equipment |
 |---|---|---|---|
-| DB Bench Press | 3x10 | 30-35 lb/hand | Dumbbell |
+| DB Floor Press | 3x10 | 30-35 lb/hand | Dumbbell |
 | Incline DB Press | 2x10 | 22-25 lb/hand | Dumbbell |
 | DB Row | 3x10 | 17-18 lb | Dumbbell |
 | Lat Pulldown | 3x12 | 40 lb | Cable |

@@ -12,7 +12,7 @@ Skip static stretching entirely — with hypermobility, it works against joint s
 - 4-5 min light cardio — bike, brisk walk, or jumping jacks. Get breathing up slightly, not winded.
 - Dynamic mobility (Upper A & B), no static holds: arm circles x10/direction each arm, band pull-aparts x15, scap push-ups x10 (shoulder blade protraction/retraction, elbows soft), wrist circles x10/direction each hand (given the wrist history — do this even on days wrist roller isn't programmed).
 - Dynamic mobility (Lower A & B), no static holds: leg swings x10/side (front-back, then side-side), bodyweight squats x10, hip circles x10/side, ankle rocks x10/side.
-- Ramp-up, Upper A: DB Bench Press — 1x10 empty hands/very light DB, 1x5 at ~50% working weight. DB Shoulder Press — 1x8 at a light weight (5-8 lb) before working sets, given the shoulder history.
+- Ramp-up, Upper A: DB Floor Press — 1x10 empty hands/very light DB, 1x5 at ~50% working weight. DB Shoulder Press — 1x8 at a light weight (5-8 lb) before working sets, given the shoulder history.
 - Ramp-up, Upper B: DB Floor Press or Incline Push-ups — 1x8-10 at reduced range/incline before working sets. DB Shoulder Press — same as Upper A, 1x8 light before working sets.
 - Ramp-up, Lower A & B: Barbell Box Squat — 1x10 bodyweight box squat, 1x5 at ~50% working weight. RDL — 1x8 with an empty bar or very light DB before working sets — a separate movement pattern (hip hinge, not knee-dominant) from the squat, so it gets its own ramp-up rather than riding the squat's warm-up.
 - Isolation/accessory work (rows, curls, face pulls, calf raises, tib raises) skips ramp-up sets entirely — just start at the prescribed working weight.
