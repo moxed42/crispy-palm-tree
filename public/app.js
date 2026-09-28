@@ -199,11 +199,16 @@ function renderPinScreen(error) {
 const WEEKDAY_ABBR = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const WEEKDAY_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-// day_key holds a full descriptive heading ("Day 1 (Monday) — Upper A") for
-// training, or is null for a recurring/daily task — matched against the
-// selected date's weekday name rather than assuming a fixed shape.
+// day_key holds a full descriptive heading for training — either a real
+// calendar date ("Day 1 (2026-09-28 Mon) — Upper A", current format) or,
+// for older/other programs still on the recurring weekday template
+// ("Day 1 (Monday) — Upper A"), a weekday name. Match on the embedded ISO
+// date when present; fall back to weekday-name matching otherwise so a
+// program like week1/ (kept inactive as a reference example) still works.
 function taskMatchesDate(task, dateStr) {
   if (!task.day_key) return true;
+  const isoMatch = task.day_key.match(/\d{4}-\d{2}-\d{2}/);
+  if (isoMatch) return isoMatch[0] === dateStr;
   const d = new Date(dateStr + "T00:00:00");
   const abbr = WEEKDAY_ABBR[d.getDay()];
   const full = WEEKDAY_FULL[d.getDay()];
@@ -225,11 +230,18 @@ function dayKeysForCategory(categoryId) {
   return seen;
 }
 
-// day_key is a full heading like "Day 1 (Monday) — Upper A" — the picker
-// only needs the short "Upper A" part after the dash.
+// day_key is a full heading like "Day 1 (2026-09-28 Mon) — Upper A" — the
+// picker needs the short "Upper A" part after the dash, prefixed with a
+// compact date when one's embedded (a month of dated pages reuses "Upper A"
+// several times, so the date is what actually distinguishes the chips).
 function shortDayLabel(dayKey) {
   const parts = dayKey.split("—");
-  return (parts.length > 1 ? parts[1] : dayKey).trim();
+  const typeLabel = (parts.length > 1 ? parts[1] : dayKey).trim();
+  const isoMatch = dayKey.match(/\d{4}-\d{2}-\d{2}/);
+  if (!isoMatch) return typeLabel;
+  const d = new Date(isoMatch[0] + "T00:00:00");
+  const shortDate = `${WEEKDAY_ABBR[d.getDay()]} ${d.getMonth() + 1}/${d.getDate()}`;
+  return `${shortDate} · ${typeLabel}`;
 }
 
 function groupTasksByDay(tasks) {
