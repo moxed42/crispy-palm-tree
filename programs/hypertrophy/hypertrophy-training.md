@@ -17,6 +17,7 @@ date, but shift the actual weekdays around your week as needed.
 | Face Pulls | 3x15 | 25 lb | Cable |
 | Hammer Curls | 2x12 | 10 lb | Dumbbell |
 | Tricep Extension | 2x12 | 12 lb | Cable |
+| Wrist Roller (Flexion + Extension) | 2x30-60 sec/direction | light load (5-10 lb) | Wrist Roller |
 
 ## Day 2 (Tuesday) — Lower A
 | Exercise | Sets x Reps | Weight | Equipment |
@@ -26,6 +27,7 @@ date, but shift the actual weekdays around your week as needed.
 | DB Split Squat | 3x8/leg | 25 lb | Dumbbell |
 | Standing DB Calf Raise | 3x12 | 20-25 lb/hand | Dumbbell |
 | Tib Raises | 2x12 | 10 lb | Plate |
+| Balance Board — Single-Leg Hold | 2x30-45 sec/leg | bodyweight | Balance Board |
 | Deadbugs | 3x12/side | bodyweight | Bodyweight |
 
 ## Day 3 (Thursday) — Upper B
@@ -38,6 +40,7 @@ date, but shift the actual weekdays around your week as needed.
 | DB Shoulder Press | 3x10 | 15 lb | Dumbbell |
 | Hammer Curls | 2x12 | 10 lb | Dumbbell |
 | Tricep Extension | 2x12 | 12 lb | Cable |
+| Wrist Roller (Flexion + Extension) | 2x30-60 sec/direction | light load (5-10 lb) | Wrist Roller |
 
 ## Day 4 (Friday) — Lower B
 | Exercise | Sets x Reps | Weight | Equipment |
@@ -46,4 +49,5 @@ date, but shift the actual weekdays around your week as needed.
 | DB Split Squat | 3x8/leg | 25-30 lb | Dumbbell |
 | Barbell Box Squat (lighter, higher rep) | 3x12 | 40 lb | Barbell |
 | Standing DB Calf Raise | 3x15 | 20-25 lb/hand | Dumbbell |
+| Balance Board — Single-Leg Hold | 2x30-45 sec/leg | bodyweight | Balance Board |
 | Deadbugs | 3x12/side | bodyweight | Bodyweight |
