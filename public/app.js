@@ -80,6 +80,26 @@ const EXERCISE_LIBRARY = [
     title: "Core stability",
     cues: ["Keep elbows/knees soft, not locked, on any straight-limb variation — avoid resting weight passively into a hyperextended joint."],
   },
+  {
+    match: /wrist roller/i,
+    title: "Wrist roller",
+    caution:
+      "Given a wrist/shoulder history, this is a spot where more load doesn't mean more benefit — a wrist roller puts continuous end-range tension through the wrist, which is exactly where a hypermobile joint is least stable.",
+    cues: [
+      "Start with a light load and slow, controlled rotations in both directions — this is a mobility/control drill, not a strength max-out.",
+      "Stop immediately on any pinching, clicking, or sharp pain — normal forearm fatigue is fine, joint pain is not.",
+      "Keep elbows slightly bent and close to the body rather than locked out and away — reduces leverage stress on the wrist.",
+    ],
+  },
+  {
+    match: /balance board/i,
+    title: "Balance board / ankle work",
+    cues: [
+      "Priority is stability and control, not how long you can wobble — the same hypermobility principle as squats: don't chase extra range, build the stabilizers that hold the joint still.",
+      "Stand near a wall or sturdy surface you can touch for support, especially early on — there's no benefit to falling off to prove balance.",
+      "Keep a soft knee and stack hip-knee-ankle rather than letting the knee cave in — that alignment matters more on an unstable surface than a stable one.",
+    ],
+  },
 ];
 
 function findExerciseCues(label) {
