@@ -27,6 +27,7 @@ signal to move back toward the hypertrophy program, not a fixed week count.
 | RDL (empty bar or DB) | 2x8 | 15-20 lb | Barbell/Dumbbell |
 | DB Split Squat | 2x8/leg | bodyweight or 5-8 lb/hand | Dumbbell/Bodyweight |
 | Standing DB Calf Raise | 2x12 | bodyweight | Bodyweight |
+| Tib Raises | 2x12 | light plate | Plate |
 | Balance Board — Directional Tilts (Fwd/Back/Side-Side) | 2x8-10 tilts/direction | bodyweight | Balance Board |
 | Deadbugs | 2x10/side | bodyweight | Bodyweight |
 
@@ -38,6 +39,9 @@ signal to move back toward the hypertrophy program, not a fixed week count.
 | Wall slides (shoulder blade control) | 3x10 | bodyweight | Bodyweight |
 | Incline push-up, form-only (pause 1 sec at bottom) | 2x8 | bodyweight | Bodyweight |
 | Dead hang (feet near ground, shoulders pulled down) | 3x15-20 sec | bodyweight | Pull-up Bar |
+| Wrist Roller (Flexion + Extension) | 1x30 sec/direction | very light (5 lb) | Wrist Roller |
+| Tib Raises | 2x12 | bodyweight/very light | Plate |
+| Balance Board — Single-Leg Hold | 2x20-30 sec/leg | bodyweight | Balance Board |
 
 ## Day 4 (2026-10-02 Fri) — Upper, Form Reset B
 | Exercise | Sets x Reps | Weight | Equipment |
@@ -68,9 +72,14 @@ signal to move back toward the hypertrophy program, not a fixed week count.
 | Dowel/broomstick RDL (hinge pattern check) | 3x10 | bodyweight/dowel | Bodyweight |
 | Glute bridge, pause 2 sec at top | 3x12 | bodyweight | Bodyweight |
 | Balance Board — Directional Tilts (Fwd/Back/Side-Side) | 2x8-10 tilts/direction | bodyweight | Balance Board |
+| Tib Raises | 2x12 | light plate | Plate |
+| Wrist Roller (Flexion + Extension) | 1x30 sec/direction | very light (5 lb) | Wrist Roller |
 
 ## Day 7 (2026-10-05 Mon) — Cardio + Mobility
 | Exercise | Sets x Reps | Weight | Equipment |
 |---|---|---|---|
 | Jump rope intervals or spin bike or outdoor walk | 20-30 min | bodyweight | Jump Rope/Bike |
 | Stretching — hip flexors, ankles, hamstrings | 10 min | bodyweight | Bodyweight |
+| Tib Raises | 2x12 | bodyweight/very light | Plate |
+| Wrist Roller (Flexion + Extension) | 1x30 sec/direction | very light (5 lb) | Wrist Roller |
+| Balance Board — Single-Leg Hold | 2x20-30 sec/leg | bodyweight | Balance Board |
