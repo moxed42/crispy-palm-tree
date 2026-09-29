@@ -20,6 +20,8 @@ recomp side (step count, general activity, not just lifting).
   reference (different equipment set, not part of the active plan).
 - Session length target: workouts should land around ~60 min including
   warmup — checked against this budget when adding exercises to a day.
+- Cardio equipment: jump rope, treadmill, stationary bike — pick from this
+  mix when writing a cardio slot, not outdoor-only options.
 - See `README.md` for the full mechanism (how program MD files become the
   live app, the D1 update workflow, `scripts/update-predictions.js` for
   weight progression).

@@ -34,7 +34,7 @@ signal to move back toward the hypertrophy program, not a fixed week count.
 ## Day 3 (2026-10-01 Thu) — Active Recovery + Upper Form Reinforcement
 | Exercise | Sets x Reps | Weight | Equipment |
 |---|---|---|---|
-| Easy walk or spin bike | 20-30 min | bodyweight | Treadmill/Bike |
+| Easy cardio — treadmill walk, spin bike, or jump rope, whichever appeals | 20-30 min | bodyweight | Treadmill/Bike/Jump Rope |
 | Band pull-aparts (scap squeeze, no shrug) | 3x15 | light band | Band |
 | Wall slides (shoulder blade control) | 3x10 | bodyweight | Bodyweight |
 | Incline push-up, form-only (pause 1 sec at bottom) | 2x8 | bodyweight | Bodyweight |
@@ -67,7 +67,7 @@ signal to move back toward the hypertrophy program, not a fixed week count.
 ## Day 6 (2026-10-04 Sun) — Active Recovery + Lower Form Reinforcement
 | Exercise | Sets x Reps | Weight | Equipment |
 |---|---|---|---|
-| Easy walk or spin bike | 20-30 min | bodyweight | Treadmill/Bike |
+| Easy cardio — treadmill walk, spin bike, or jump rope, whichever appeals | 20-30 min | bodyweight | Treadmill/Bike/Jump Rope |
 | Bodyweight squat, form-only (sit back, chest up, heels down) | 3x10 | bodyweight | Bodyweight |
 | Dowel/broomstick RDL (hinge pattern check) | 3x10 | bodyweight/dowel | Bodyweight |
 | Glute bridge, pause 2 sec at top | 3x12 | bodyweight | Bodyweight |
@@ -78,7 +78,7 @@ signal to move back toward the hypertrophy program, not a fixed week count.
 ## Day 7 (2026-10-05 Mon) — Cardio + Mobility
 | Exercise | Sets x Reps | Weight | Equipment |
 |---|---|---|---|
-| Jump rope intervals or spin bike or outdoor walk | 20-30 min | bodyweight | Jump Rope/Bike |
+| Jump rope intervals, spin bike, or treadmill walk | 20-30 min | bodyweight | Jump Rope/Bike/Treadmill |
 | Stretching — hip flexors, ankles, hamstrings | 10 min | bodyweight | Bodyweight |
 | Tib Raises | 2x12 | bodyweight/very light | Plate |
 | Wrist Roller (Flexion + Extension) | 1x30 sec/direction | very light (5 lb) | Wrist Roller |
