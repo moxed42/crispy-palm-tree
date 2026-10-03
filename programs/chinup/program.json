@@ -1,0 +1,22 @@
+{
+  "id": "chinup",
+  "name": "First Chin-Up Plan",
+  "theme_concept": "8-week Mon/Wed/Fri progression (negatives, band-assisted reps, holds) to a first unassisted chin-up, test day Dec 2",
+  "active": true,
+  "categories": [
+    {
+      "id": "chinup-training",
+      "label": "Workouts",
+      "kind": "sets",
+      "source": "chinup-training.md",
+      "layout": "day-headings"
+    },
+    {
+      "id": "chinup-guidelines",
+      "label": "Guidelines",
+      "kind": "reference",
+      "source": "chinup-guidelines.md",
+      "layout": "simple-table"
+    }
+  ]
+}
