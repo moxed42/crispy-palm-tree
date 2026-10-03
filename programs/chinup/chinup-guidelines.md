@@ -1,0 +1,38 @@
+# Guidelines
+
+## Hypermobility and Form Cues
+Because of hypermobility, the goal is to hang and lower with muscle control instead of resting on the joints. This is common coaching practice, not drawn from the studies in Evidence and Sources below.
+- Active hang: shoulders pulled slightly down, ribs tucked, never a passive dangle.
+- Elbows: keep a slight bend at the bottom for the first few weeks, then build to full extension with control.
+- Lowering: never drop. Every negative and every band rep is lowered slowly.
+- Starting the pull: pull your shoulders down first, then pull your elbows toward your ribs. An EMG study found chin-ups/pull-ups start with the lower trapezius and pectoralis major and finish with the biceps and lats.
+- Stop signs: end the set if a joint feels unstable or painful. If it keeps happening, see a physical therapist.
+
+## Warm-Up (every session, ~5 min)
+- Band pull-aparts 2x12.
+- Scap pulls 2x6.
+- Rest 2 minutes between pulling sets once the working sets start.
+- Stop every set 1-2 reps short of failure.
+
+## Progression Rules
+- Within a phase: once every set of an exercise hits the top of its rep range, make it harder (thinner band, slower tempo, or feet further forward on TRX rows).
+- Stuck: if you can't reach 4x4 band-assisted chin-ups with the thinner band by the end of week 6, repeat phase 2 for another week rather than moving on — this is a coaching rule of thumb, not something from the studies below, and it may push the test a week later.
+- Weeks 7-8: at the start of Day 1 each week, after the warm-up, try one unassisted chin-up from an active hang. If it works early, film it and keep following the plan.
+- Optional in weeks 7-8: add a few palms-away negatives if you want a head start on the pull-up later — not needed for the chin-up goal.
+
+## Test Day (Dec 2)
+- Rest Nov 30 and Dec 1 — no pulling work.
+- Do the usual warm-up, then up to 3 attempts with 2-3 minutes between them.
+- A rep counts if you start from an active hang, pull without swinging or kicking, get your chin over the bar, and lower under control.
+- A first chin-up in 60 days is plausible but not guaranteed. If close but missed, the plan carries over: repeat phase 3 and test again two weeks later.
+
+## Tracking Log
+Fill in one row per week from your best set that week — the three numbers to watch are band-assisted reps (Day 2), chin-over-bar hold time, and active hang time. Log these in the app's per-exercise set entries on the relevant Day 2/Day 3 of each week rather than a separate sheet.
+
+## Evidence and Sources
+I found no trials testing pull-up or chin-up progressions in beginners specifically. The three-day structure comes from general resistance-training research, and the band/negative/hold progression is standard coaching practice, not a cited protocol. The failure-training studies measured muscle growth, so applying them to strength here is an inference.
+- Schoenfeld et al., 2016, Sports Medicine: training each muscle group twice a week beat once a week for hypertrophy (doi.org/10.1007/s40279-016-0543-8).
+- Currier et al., 2023, British Journal of Sports Medicine: higher-load, multiset, thrice-weekly training ranked best for strength (doi.org/10.1136/bjsports-2023-106807).
+- Iversen et al., 2021, Sports Medicine: weekly volume matters more than frequency, and a pull-up is a recommended upper-body pulling exercise (doi.org/10.1007/s40279-021-01490-1).
+- Refalo et al., 2022, Sports Medicine: training to failure showed no advantage over stopping short for hypertrophy (doi.org/10.1007/s40279-022-01784-y).
+- Youdas et al., 2010, Journal of Strength and Conditioning Research: EMG comparison of pull-ups and chin-ups (doi.org/10.1519/JSC.0b013e3181f1598c).

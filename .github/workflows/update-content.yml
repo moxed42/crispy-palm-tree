@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "programs/**"
+      - "scripts/seed-from-md.js"
+  workflow_dispatch: {}
 
 jobs:
   seed:

@@ -80,6 +80,27 @@ const EXERCISE_LIBRARY = [
     title: "Core stability",
     cues: ["Keep elbows/knees soft, not locked, on any straight-limb variation — avoid resting weight passively into a hyperextended joint."],
   },
+  {
+    match: /wrist roller/i,
+    title: "Wrist roller",
+    caution:
+      "Given a wrist/shoulder history, this is a spot where more load doesn't mean more benefit — a wrist roller puts continuous end-range tension through the wrist, which is exactly where a hypermobile joint is least stable.",
+    cues: [
+      "Start with a light load and slow, controlled rotations in both directions — this is a mobility/control drill, not a strength max-out.",
+      "Stop immediately on any pinching, clicking, or sharp pain — normal forearm fatigue is fine, joint pain is not.",
+      "Keep elbows slightly bent and close to the body rather than locked out and away — reduces leverage stress on the wrist.",
+    ],
+  },
+  {
+    match: /balance board/i,
+    title: "Balance board / ankle work",
+    cues: [
+      "Priority is stability and control, not how long you can wobble — the same hypermobility principle as squats: don't chase extra range, build the stabilizers that hold the joint still.",
+      "On the directional tilts, move slowly and stop the tilt under control before it maxes out — the goal is controlling the ankle through the motion, not seeing how far it goes.",
+      "Stand near a wall or sturdy surface you can touch for support, especially early on — there's no benefit to falling off to prove balance.",
+      "Keep a soft knee and stack hip-knee-ankle rather than letting the knee cave in — that alignment matters more on an unstable surface than a stable one.",
+    ],
+  },
 ];
 
 function findExerciseCues(label) {
@@ -95,6 +116,7 @@ const state = {
   activeDates: [],
   date: todayStr(),
   activeCategoryId: null,
+  selectedDayKey: null, // null = date-driven ("Auto"); a specific day_key pins the view regardless of date
   expandedTaskId: null,
   collapsedGroups: new Set(),
   buildInfo: null,
@@ -177,11 +199,16 @@ function renderPinScreen(error) {
 const WEEKDAY_ABBR = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const WEEKDAY_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-// day_key holds a full descriptive heading ("Day 1 (Monday) — Upper A") for
-// training, or is null for a recurring/daily task — matched against the
-// selected date's weekday name rather than assuming a fixed shape.
+// day_key holds a full descriptive heading for training — either a real
+// calendar date ("Day 1 (2026-09-28 Mon) — Upper A", current format) or,
+// for older/other programs still on the recurring weekday template
+// ("Day 1 (Monday) — Upper A"), a weekday name. Match on the embedded ISO
+// date when present; fall back to weekday-name matching otherwise so a
+// program like week1/ (kept inactive as a reference example) still works.
 function taskMatchesDate(task, dateStr) {
   if (!task.day_key) return true;
+  const isoMatch = task.day_key.match(/\d{4}-\d{2}-\d{2}/);
+  if (isoMatch) return isoMatch[0] === dateStr;
   const d = new Date(dateStr + "T00:00:00");
   const abbr = WEEKDAY_ABBR[d.getDay()];
   const full = WEEKDAY_FULL[d.getDay()];
@@ -190,6 +217,31 @@ function taskMatchesDate(task, dateStr) {
 
 function tasksForCategoryOnDate(categoryId, dateStr) {
   return state.tasks.filter((t) => t.category_id === categoryId && taskMatchesDate(t, dateStr));
+}
+
+// Distinct day_keys for a category, in program order (dedup, excludes the
+// null/recurring group) — used to build the "jump to a workout regardless
+// of date" picker.
+function dayKeysForCategory(categoryId) {
+  const seen = [];
+  for (const t of state.tasks) {
+    if (t.category_id === categoryId && t.day_key && !seen.includes(t.day_key)) seen.push(t.day_key);
+  }
+  return seen;
+}
+
+// day_key is a full heading like "Day 1 (2026-09-28 Mon) — Upper A" — the
+// picker needs the short "Upper A" part after the dash, prefixed with a
+// compact date when one's embedded (a month of dated pages reuses "Upper A"
+// several times, so the date is what actually distinguishes the chips).
+function shortDayLabel(dayKey) {
+  const parts = dayKey.split("—");
+  const typeLabel = (parts.length > 1 ? parts[1] : dayKey).trim();
+  const isoMatch = dayKey.match(/\d{4}-\d{2}-\d{2}/);
+  if (!isoMatch) return typeLabel;
+  const d = new Date(isoMatch[0] + "T00:00:00");
+  const shortDate = `${WEEKDAY_ABBR[d.getDay()]} ${d.getMonth() + 1}/${d.getDate()}`;
+  return `${shortDate} · ${typeLabel}`;
 }
 
 function groupTasksByDay(tasks) {
@@ -311,11 +363,15 @@ function renderTaskByKind(task, category) {
 }
 
 function renderCategoryView(category) {
-  const tasks = tasksForCategoryOnDate(category.id, state.date);
+  const dayKeys = category.kind === "sets" ? dayKeysForCategory(category.id) : [];
+  const tasks = state.selectedDayKey
+    ? state.tasks.filter((t) => t.category_id === category.id && t.day_key === state.selectedDayKey)
+    : tasksForCategoryOnDate(category.id, state.date);
   const groups = groupTasksByDay(tasks);
   const showDateBar = category.kind !== "reference";
 
-  let html = showDateBar ? renderDatePicker() : "";
+  let html = dayKeys.length > 1 ? renderDaySelector(dayKeys) : "";
+  html += showDateBar ? renderDatePicker() : "";
   for (const [dayKey, dayTasks] of groups) {
     const groupKey = `${category.id}:${dayKey}`;
     const collapsed = state.collapsedGroups.has(groupKey);
@@ -332,7 +388,21 @@ function renderCategoryView(category) {
     if (!collapsed) html += dayTasks.map((t) => renderTaskByKind(t, category)).join("");
     html += `</div>`;
   }
-  return html || (showDateBar ? renderDatePicker() : "") + `<div class="reference-note">Nothing scheduled here for this date.</div>`;
+  if (groups.size === 0) html += `<div class="reference-note">Nothing scheduled here for this date.</div>`;
+  return html;
+}
+
+function renderDaySelector(dayKeys) {
+  const chips = [{ key: null, label: "Auto" }, ...dayKeys.map((k) => ({ key: k, label: shortDayLabel(k) }))];
+  return `
+    <div class="day-selector">
+      ${chips
+        .map(
+          (c) => `<button type="button" class="day-chip ${state.selectedDayKey === c.key ? "active" : ""}" data-action="select-day" data-day-key="${escapeHtml(c.key || "")}">${escapeHtml(c.label)}</button>`
+        )
+        .join("")}
+    </div>
+  `;
 }
 
 function renderDatePicker() {
@@ -458,6 +528,7 @@ function render() {
     btn.addEventListener("click", () => {
       state.activeCategoryId = btn.dataset.tab;
       state.expandedTaskId = null;
+      state.selectedDayKey = null;
       render();
     });
   });
@@ -465,6 +536,15 @@ function render() {
   document.querySelectorAll("[data-goto]").forEach((el) => {
     el.addEventListener("click", () => {
       state.activeCategoryId = el.dataset.goto;
+      state.selectedDayKey = null;
+      render();
+    });
+  });
+
+  document.querySelectorAll('[data-action="select-day"]').forEach((el) => {
+    el.addEventListener("click", () => {
+      state.selectedDayKey = el.dataset.dayKey || null;
+      state.expandedTaskId = null;
       render();
     });
   });
