@@ -330,6 +330,29 @@ nav.tabbar button.active { color: var(--accent); }
   margin: 20px 0 10px;
 }
 
+/* ---------- Day selector (view a workout regardless of date) ---------- */
+.day-selector {
+  padding: 10px 0 0;
+}
+
+.day-select {
+  width: 100%;
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-dim) 50%), linear-gradient(135deg, var(--text-dim) 50%, transparent 50%);
+  background-position: calc(100% - 20px) center, calc(100% - 15px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
 /* ---------- Date picker ---------- */
 .date-bar {
   display: flex;

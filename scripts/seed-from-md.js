@@ -613,6 +613,18 @@ function main() {
         )}', ${t.detail ? `'${sqlEscape(t.detail)}'` : "NULL"}, ${metaJson ? `'${metaJson}'` : "NULL"}, ${t.sort});`
       );
     }
+
+    // Task IDs are content-derived (see makeStableId), so renaming or
+    // removing a row in the MD produces a *new* id rather than reusing the
+    // old one — INSERT OR REPLACE alone would leave the old row (and old
+    // label) behind forever. Prune anything in this category that the
+    // current MD no longer produces.
+    const currentIds = tasks.map((t) => `'${sqlEscape(t.id)}'`);
+    statements.push(
+      currentIds.length
+        ? `DELETE FROM tasks WHERE category_id = '${sqlEscape(categoryId)}' AND id NOT IN (${currentIds.join(", ")});`
+        : `DELETE FROM tasks WHERE category_id = '${sqlEscape(categoryId)}';`
+    );
   }
 
   console.log(statements.join("\n"));

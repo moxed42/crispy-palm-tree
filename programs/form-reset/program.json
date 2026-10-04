@@ -1,0 +1,22 @@
+{
+  "id": "form-reset",
+  "name": "Form Reset — Week 1",
+  "theme_concept": "7-day habit week: every day has something, loads are deliberately light, two days are pure recovery/technique work",
+  "active": false,
+  "categories": [
+    {
+      "id": "form-reset-training",
+      "label": "Workouts",
+      "kind": "sets",
+      "source": "form-reset-training.md",
+      "layout": "day-headings"
+    },
+    {
+      "id": "form-reset-guidelines",
+      "label": "Guidelines",
+      "kind": "reference",
+      "source": "form-reset-guidelines.md",
+      "layout": "simple-table"
+    }
+  ]
+}

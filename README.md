@@ -13,9 +13,10 @@ lot on iOS Safari in home-screen/standalone mode.
   category: tap an exercise to expand it, log actual weight/reps per set,
   and see hypermobility-aware form cues (sourced from established
   hypermobility/EDS physical-therapy guidance, not social media). Day
-  headings map the split to specific weekdays (Mon/Tue/Thu/Fri by default —
-  edit the MD file if your week runs differently) so "Today" always shows
-  the right day.
+  headings are real calendar dates (`## Day 5 (2026-10-05 Mon) — Upper A`),
+  one exact page per session for roughly a month out, each with its own
+  predicted weight per exercise — not a recurring weekday template. See
+  "Updating predicted weights" below for how those numbers get refreshed.
 - **Guidelines** — warm-up protocol, the Week 1 ramp-in, per-session rules
   (RIR targets, progression, rest periods), and time-per-session estimates
   (`programs/hypertrophy/hypertrophy-guidelines.md`). A `kind: "reference"`
@@ -115,10 +116,56 @@ pushing the MD *is* the update. The Action re-parses every program under
 `programs/` on each push (not just the changed one) and re-applies each
 program's seed to D1, so it's always safe to re-run even without changes.
 
+## Updating predicted weights
+
+Each day's page in `programs/hypertrophy/hypertrophy-training.md` shows a
+predicted weight per exercise. Only the *next unlogged* occurrence of each
+exercise is a real prediction — it's computed from your most recent logged
+session for that exercise using the progression rule in
+`hypertrophy-guidelines.md` (hit the top of the rep range on every set →
+bump the smallest increment; otherwise hold). Dates further out just carry
+the same number forward as a placeholder until they become the "next
+occurrence" themselves.
+
+After logging a session, refresh the upcoming predictions:
+```
+npx wrangler d1 execute meridian-ops-db --remote --json --command \
+  "SELECT t.id as task_id, t.label, t.day_key, t.detail, t.meta, \
+          s.date, s.set_number, s.weight, s.reps \
+   FROM set_logs s JOIN tasks t ON s.task_id = t.id \
+   WHERE t.category_id = 'hypertrophy-training' \
+   ORDER BY s.date DESC" > /tmp/set-logs.json
+node scripts/update-predictions.js programs/hypertrophy/hypertrophy-training.md /tmp/set-logs.json
+```
+Review the diff it makes (it's a mechanical weight-bump heuristic, not a
+substitute for judgment — check it against what you actually have available
+in DB/Powerblock increments), then commit and push as usual. Handing this
+whole flow to a Claude Code session (like the "Option B" workflow above)
+works well since it can run the query and script, show you the diff, and
+push once you're happy with it.
+
 **One thing to set up once for this to work:** add `CLOUDFLARE_API_TOKEN`
 and `CLOUDFLARE_ACCOUNT_ID` as repo secrets (Settings → Secrets and
-variables → Actions) — the token needs D1 edit permission. Without these
+variables → Actions) — the token needs **D1 Edit** permission. Without these
 the Action will fail at the "Apply each program's seed to D1" step.
+
+## Deploying code changes automatically
+
+A separate workflow, `.github/workflows/deploy.yml`, runs `npm run deploy`
+automatically whenever `public/`, `worker/`, `wrangler.toml`, or
+`package.json` change on `main` — so a frontend/backend code change (not
+just program content) goes live without needing to run `npm run deploy`
+by hand. It reuses the same `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`
+secrets as the content-sync workflow above, but that token needs **Workers
+Scripts: Edit** permission too (not just D1 Edit) for this one to succeed —
+widen the existing token's permissions at
+[dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens)
+rather than creating a second token, unless you'd rather keep them scoped
+separately (in which case, give the deploy workflow its own secret and
+update its `env:` block to reference it).
+
+You can still run `npm run deploy` locally any time — the two aren't
+mutually exclusive, this workflow just means you don't have to.
 
 To add a whole new training block later (e.g. a new phase or split):
 create `programs/<new-id>/` with its MD files and a `program.json` manifest

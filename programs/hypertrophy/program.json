@@ -2,7 +2,7 @@
   "id": "hypertrophy",
   "name": "4-Day Hypertrophy Program",
   "theme_concept": "Upper/Lower split for a return-to-training lifter with a wrist/shoulder history and joint hypermobility",
-  "active": true,
+  "active": false,
   "categories": [
     {
       "id": "training",
