@@ -14,6 +14,9 @@ Because of hypermobility, the goal is to hang and lower with muscle control inst
 - Rest 2 minutes between pulling sets once the working sets start.
 - Stop every set 1-2 reps short of failure.
 
+## Straight-Arm Pulldown (every session)
+Because pulls tend to get felt in the arms rather than the back, every session now includes a light Straight-Arm Pulldown (pulley or band) — 2x8-10, arms stay straight the whole rep, head height to thighs. If you feel it in your arms instead of your back, use less weight; this is motor practice for engaging the lats, not a strength exercise. Same cue applies on every pulling exercise now: shoulders down first, then elbows toward the hip pockets. Not backed by trial evidence that it speeds up a first chin-up — it's technique work, so keep it light. Timing differs by day: on Negatives day it comes last; on Assisted Reps day it comes first, before the heavier pulls, specifically to find your lats before loading them; on Holds and Rows day it comes after the TRX rows, same light weight, focused on feeling your back.
+
 ## Week 1-2 Adjustment
 Day 1 showed the starting level was lower than planned, so weeks 1-2 substitute easier versions of two Day 1 exercises. The weekly schedule itself doesn't change — this only affects those two sessions:
 - Chin-Up Negatives: band-assisted instead of unassisted — thickest band looped over the bar, knee or foot in it, step up to chin over bar, lower over 3 sec, 3x3. Move back to unassisted negatives (3x2 at 2-3 sec) once you can control the band-assisted descent for two weeks in a row.
@@ -40,10 +43,11 @@ No pull-up bar and no door usable for anchoring (hotel policy) — everything be
 | Band-Assisted Chin-Ups | Heavy Standing Band Pulldown | 4x8-10 | Same foot-anchored pulldown as above, thickest or doubled band, focus on full range and control |
 | Dumbbell Row | Standing Band Row | 3x10-12 | Same movement as the TRX row substitute above, use a heavier band |
 | Lat Pulldown (palms toward you) | Standing Band Pulldown, underhand | 3x10-12 | Stand on the band, underhand grip, pull to chest level to match the chin-up grip |
-| Band Face Pulls | Band Face Pulls | 3x12-15 | Unchanged — already anchor-free, just pull the band apart toward your face with both hands |
+| Band Face Pulls | Band Face Pulls | 2x8-10 (build to 3x12-15) | Unchanged — already anchor-free, just pull the band apart toward your face with both hands |
 | Chin-Over-Bar Hold | Standing Band Row, hold at top | 4x15-20 sec | Stand on the band, row to your chest and hold the squeeze — mimics the isometric top-of-chin-up position |
 | Active Hang, palms away | Standing Band Pulldown, paused reps | 3x12-15 | No bar to hang from — pause 2 sec at the bottom of each foot-anchored pulldown rep for the same time-under-tension |
 | Dumbbell Curls | Band Curls | 2x10-12 | Step on the band, curl, lower slowly |
+| Straight-Arm Pulldown | Standing Band Straight-Arm Pulldown | 2x8-10 | Stand on the band, arms straight the whole rep, pull from head height down to your thighs — same arms-straight cue, just foot-anchored instead of a door or pulley |
 
 ## Test Day (Jan 1)
 - Rest Dec 28 - Dec 31 — no pulling work.

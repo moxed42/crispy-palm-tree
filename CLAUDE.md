@@ -20,7 +20,7 @@ recomp side (step count, general activity, not just lifting).
   (negatives -> band-assisted reps -> holds, 4 phases) to a first
   unassisted chin-up, running Oct 5 - test day Jan 1. Sourced from a doc
   the user brought in and kept in sync with it as it's revised (currently
-  synced through doc rev 24) — see `programs/chinup/chinup-guidelines.md`
+  synced through doc rev 26) — see `programs/chinup/chinup-guidelines.md`
   for its progression rules, the weeks 1-2 exercise adjustment, hypermobility
   form cues, and cited evidence.
 - `programs/week1/` — an older, inactive example program kept for
