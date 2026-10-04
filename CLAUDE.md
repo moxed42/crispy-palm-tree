@@ -16,12 +16,13 @@ recomp side (step count, general activity, not just lifting).
   week (Sep 29 - Oct 5) is done. Exit criteria for moving back to
   hypertrophy are in `programs/form-reset/form-reset-guidelines.md` if
   picked back up, not a fixed week count.
-- `programs/chinup/` — active program, an 8-week Mon/Wed/Fri progression
-  (negatives -> band-assisted reps -> holds, 3 phases) to a first
-  unassisted chin-up, running Oct 5 - test day Dec 2. Sourced from a doc
-  the user brought in, not generated fresh — see
-  `programs/chinup/chinup-guidelines.md` for its progression rules,
-  hypermobility form cues, and cited evidence.
+- `programs/chinup/` — active program, a 12-week Mon/Wed/Fri progression
+  (negatives -> band-assisted reps -> holds, 4 phases) to a first
+  unassisted chin-up, running Oct 5 - test day Jan 1. Sourced from a doc
+  the user brought in and kept in sync with it as it's revised (currently
+  synced through doc rev 24) — see `programs/chinup/chinup-guidelines.md`
+  for its progression rules, the weeks 1-2 exercise adjustment, hypermobility
+  form cues, and cited evidence.
 - `programs/week1/` — an older, inactive example program kept for
   reference (different equipment set, not part of the active plan).
 - Session length target: workouts should land around ~60 min including

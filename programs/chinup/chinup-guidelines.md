@@ -9,25 +9,32 @@ Because of hypermobility, the goal is to hang and lower with muscle control inst
 - Stop signs: end the set if a joint feels unstable or painful. If it keeps happening, see a physical therapist.
 
 ## Warm-Up (every session, ~5 min)
-- Band pull-aparts 2x12.
-- Scap pulls 2x6.
+- Band pull-aparts 2x8 with your lightest band.
+- Scap pulls 2x3 — stop short of tired, the warm-up shouldn't use up your shoulders before the main work.
 - Rest 2 minutes between pulling sets once the working sets start.
 - Stop every set 1-2 reps short of failure.
 
-## Progression Rules
-- Within a phase: once every set of an exercise hits the top of its rep range, make it harder (thinner band, slower tempo, or feet further forward on TRX rows).
-- Stuck: if you can't reach 4x4 band-assisted chin-ups with the thinner band by the end of week 6, repeat phase 2 for another week rather than moving on — this is a coaching rule of thumb, not something from the studies below, and it may push the test a week later.
-- Weeks 7-8: at the start of Day 1 each week, after the warm-up, try one unassisted chin-up from an active hang. If it works early, film it and keep following the plan.
-- Optional in weeks 7-8: add a few palms-away negatives if you want a head start on the pull-up later — not needed for the chin-up goal.
+## Week 1-2 Adjustment
+Day 1 showed the starting level was lower than planned, so weeks 1-2 substitute easier versions of two Day 1 exercises. The weekly schedule itself doesn't change — this only affects those two sessions:
+- Chin-Up Negatives: band-assisted instead of unassisted — thickest band looped over the bar, knee or foot in it, step up to chin over bar, lower over 3 sec, 3x3. Move back to unassisted negatives (3x2 at 2-3 sec) once you can control the band-assisted descent for two weeks in a row.
+- Scap Pulls, palms away: 3x3 with 60-90 sec rest counts as the work. Add one rep per set once all sets feel clean, until you reach 3x6.
+- Everything else (TRX rows, band-assisted reps, holds and rows) is unchanged — scaled by feet position and band thickness as usual.
+- Reassess at the end of week 4: if band-assisted chin-ups aren't yet 3x4 with the thickest band, the Jan 1 test gets harder to hit and the date gets reassessed.
 
-## Test Day (Dec 2)
-- Rest Nov 30 and Dec 1 — no pulling work.
+## Progression Rules
+- Within a phase: once every set of an exercise hits the top of its rep range, make it harder (thinner band, slower tempo, or feet further forward on TRX rows). Phase 2's focus is adding reps before changing bands specifically.
+- Stuck: if you can't reach 4x4 band-assisted chin-ups with the thinner band by the end of week 9, repeat phase 3 for another week rather than moving on — this is a coaching rule of thumb, not something from the studies below, and it may push the test a week later.
+- Weeks 10-12: at the start of Day 1 each week, after the warm-up, try one unassisted chin-up from an active hang. If it works early, film it and keep following the plan.
+- Optional in weeks 10-12: add a few palms-away negatives if you want a head start on the pull-up later — not needed for the chin-up goal.
+
+## Test Day (Jan 1)
+- Rest Dec 28 - Dec 31 — no pulling work.
 - Do the usual warm-up, then up to 3 attempts with 2-3 minutes between them.
 - A rep counts if you start from an active hang, pull without swinging or kicking, get your chin over the bar, and lower under control.
-- A first chin-up in 60 days is plausible but not guaranteed. If close but missed, the plan carries over: repeat phase 3 and test again two weeks later.
+- A first chin-up after 12 weeks is plausible but not guaranteed. If close but missed, the plan carries over: repeat phase 4 and test again two weeks later.
 
 ## Tracking Log
-Fill in one row per week from your best set that week — the three numbers to watch are band-assisted reps (Day 2), chin-over-bar hold time, and active hang time. Log these in the app's per-exercise set entries on the relevant Day 2/Day 3 of each week rather than a separate sheet.
+Fill in one row per week from your best set that week, weeks 1-12 (Oct 5 - Dec 27) plus the Jan 1 test — the three numbers to watch are band-assisted reps (Day 2), chin-over-bar hold time, and active hang time. Log these in the app's per-exercise set entries on the relevant Day 2/Day 3 of each week rather than a separate sheet.
 
 ## Evidence and Sources
 I found no trials testing pull-up or chin-up progressions in beginners specifically. The three-day structure comes from general resistance-training research, and the band/negative/hold progression is standard coaching practice, not a cited protocol. The failure-training studies measured muscle growth, so applying them to strength here is an inference.
