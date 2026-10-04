@@ -392,15 +392,20 @@ function renderCategoryView(category) {
   return html;
 }
 
+// A dropdown rather than a chip row — a program with a month/season's worth
+// of dated day_keys (e.g. 25 chin-up sessions) turns a chip grid into an
+// unreadable wall of buttons, and a <select> scales to any count the same way.
 function renderDaySelector(dayKeys) {
-  const chips = [{ key: null, label: "Auto" }, ...dayKeys.map((k) => ({ key: k, label: shortDayLabel(k) }))];
+  const options = [{ key: "", label: "Auto (today's date)" }, ...dayKeys.map((k) => ({ key: k, label: shortDayLabel(k) }))];
   return `
     <div class="day-selector">
-      ${chips
-        .map(
-          (c) => `<button type="button" class="day-chip ${state.selectedDayKey === c.key ? "active" : ""}" data-action="select-day" data-day-key="${escapeHtml(c.key || "")}">${escapeHtml(c.label)}</button>`
-        )
-        .join("")}
+      <select class="day-select" data-action="select-day">
+        ${options
+          .map(
+            (o) => `<option value="${escapeHtml(o.key)}" ${(state.selectedDayKey || "") === o.key ? "selected" : ""}>${escapeHtml(o.label)}</option>`
+          )
+          .join("")}
+      </select>
     </div>
   `;
 }
@@ -542,8 +547,8 @@ function render() {
   });
 
   document.querySelectorAll('[data-action="select-day"]').forEach((el) => {
-    el.addEventListener("click", () => {
-      state.selectedDayKey = el.dataset.dayKey || null;
+    el.addEventListener("change", () => {
+      state.selectedDayKey = el.value || null;
       state.expandedTaskId = null;
       render();
     });
