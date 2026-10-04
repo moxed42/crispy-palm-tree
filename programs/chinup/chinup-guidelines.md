@@ -27,25 +27,22 @@ Day 1 showed the starting level was lower than planned, so weeks 1-2 substitute 
 - Weeks 10-12: at the start of Day 1 each week, after the warm-up, try one unassisted chin-up from an active hang. If it works early, film it and keep following the plan.
 - Optional in weeks 10-12: add a few palms-away negatives if you want a head start on the pull-up later — not needed for the chin-up goal.
 
-## Travel — Hotel + Bands Only, No Gym
-No pull-up bar, so negatives, the active hang, and the chin-over-bar hold aren't directly doable — the substitutes below keep the same pulling pattern using band tension instead of bodyweight/gravity. Same day structure (Negatives / Assisted Reps / Holds and Rows) and the same warm-up/cool-down — only the main lifts swap. If you're traveling near the Jan 1 test date, push the test back rather than testing off a travel week — see Progression Rules above for how reassessment works. Use this for any session that falls on a travel day, regardless of which phase you're in — the band thickness and tempo notes from that day's normal version still apply.
-
-## Travel — Door Anchor, Entry Door Only
-If the entry door is the only door available: anchor on the hinge side, not the handle/lock side — a band pulling against the latch and striker plate can work it loose or pop the door under load, especially with an auto-closer or electronic lock involved. The hinge side is solid and doesn't touch the lock mechanism at all. For the overhead moves (pulldowns, scap pulls) anchor near the top of the door on that hinge side so the band comes from above when you kneel on the room side; for rows, anchor lower, same hinge side. No dedicated door-anchor strap? Most flat bands loop directly over the top of the door itself (door open, band draped over the top near the hinge side, door closed on it) — same clamping idea, no accessory needed. If you don't trust the entry door under load at all, a heavy dresser leg, bed frame, or bathroom grab bar works for the low-anchor moves (rows, curls) as a backup — just not the overhead ones, which need a door or something elevated.
+## Travel — Hotel + Bands Only, No Door Anchor
+No pull-up bar and no door usable for anchoring (hotel policy) — everything below uses only your own feet or bodyweight as the anchor: stand on the band for anything that was a pulldown or row, and use the bed to go prone for the scap/rear-delt work. Nothing here needs a fixed point in the room at all, so it works in any hotel room regardless of door policy. Same day structure (Negatives / Assisted Reps / Holds and Rows) and the same warm-up/cool-down — only the main lifts swap. If you're traveling near the Jan 1 test date, push the test back rather than testing off a travel week — see Progression Rules above for how reassessment works. Use this for any session that falls on a travel day, regardless of which phase you're in — the band thickness and tempo notes from that day's normal version still apply.
 
 ## Travel Exercise Swaps
 | Normal Exercise | Band-Only Substitute | Sets x Reps | How |
 |---|---|---|---|
-| Chin-Up Negatives | Band Pulldown, kneeling, slow release | 4x8-10 | Anchor band high on door, pull to chest, control the release back up over 3-5 sec — same slow-lowering emphasis as the real negative |
-| TRX Rows | Standing Band Row | 3x10-12 | Anchor band at chest height, step back for tension, row elbows past your ribs |
-| Scap Pulls, palms away | Band Scap Pulls | 3x6-8 | Anchor band high overhead, arms straight, pull shoulder blades down without bending the elbows |
+| Chin-Up Negatives | Standing Band Pulldown, slow release | 4x8-10 | Stand on the band with both feet shoulder-width apart, pull hands down to your hips, control the release back up over 3-5 sec — same slow-lowering emphasis as the real negative |
+| TRX Rows | Standing Band Row | 3x10-12 | Stand on the band, hinge slightly forward at the hips, row elbows back past your ribs |
+| Scap Pulls, palms away | Prone Band Y-Raise (on the bed) | 3x6-8 | Lie face down on the bed, band held in both hands in front of you, raise arms into a Y while pulling the band apart — squeeze shoulder blades down and together, no anchor needed |
 | Hollow Hold | Hollow Hold | 3x20 sec | Unchanged — no equipment needed |
-| Band-Assisted Chin-Ups | Heavy Band Pulldown | 4x8-10 | Thickest or doubled band, same kneeling pulldown as above, focus on full range and control |
+| Band-Assisted Chin-Ups | Heavy Standing Band Pulldown | 4x8-10 | Same foot-anchored pulldown as above, thickest or doubled band, focus on full range and control |
 | Dumbbell Row | Standing Band Row | 3x10-12 | Same movement as the TRX row substitute above, use a heavier band |
-| Lat Pulldown (palms toward you) | Band Pulldown, underhand grip | 3x10-12 | Anchor high, palms toward you to match the chin-up grip |
-| Band Face Pulls | Band Face Pulls | 3x12-15 | Unchanged — already band-based |
-| Chin-Over-Bar Hold | Band Pulldown, hold at bottom | 4x15-20 sec | Pull to chest and hold the squeeze — mimics the isometric top-of-chin-up position |
-| Active Hang, palms away | Band Pulldown, paused reps | 3x12-15 | No bar to hang from — higher-rep paused pulldowns substitute for the same time-under-tension |
+| Lat Pulldown (palms toward you) | Standing Band Pulldown, underhand | 3x10-12 | Stand on the band, underhand grip, pull to chest level to match the chin-up grip |
+| Band Face Pulls | Band Face Pulls | 3x12-15 | Unchanged — already anchor-free, just pull the band apart toward your face with both hands |
+| Chin-Over-Bar Hold | Standing Band Row, hold at top | 4x15-20 sec | Stand on the band, row to your chest and hold the squeeze — mimics the isometric top-of-chin-up position |
+| Active Hang, palms away | Standing Band Pulldown, paused reps | 3x12-15 | No bar to hang from — pause 2 sec at the bottom of each foot-anchored pulldown rep for the same time-under-tension |
 | Dumbbell Curls | Band Curls | 2x10-12 | Step on the band, curl, lower slowly |
 
 ## Test Day (Jan 1)

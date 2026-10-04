@@ -29,6 +29,11 @@ recomp side (step count, general activity, not just lifting).
   warmup — checked against this budget when adding exercises to a day.
 - Cardio equipment: jump rope, treadmill, stationary bike — pick from this
   mix when writing a cardio slot, not outdoor-only options.
+- Travel/hotel constraint: no door anchoring of any kind, including the
+  entry door (hotel policy) — band substitutes for travel days must be
+  foot-anchored (stand on the band) or bodyweight/bed-prone only. See
+  `programs/chinup/chinup-guidelines.md`'s Travel section for the current
+  swap list built around this.
 - See `README.md` for the full mechanism (how program MD files become the
   live app, the D1 update workflow, `scripts/update-predictions.js` for
   weight progression).
