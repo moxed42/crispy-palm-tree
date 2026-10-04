@@ -27,6 +27,24 @@ Day 1 showed the starting level was lower than planned, so weeks 1-2 substitute 
 - Weeks 10-12: at the start of Day 1 each week, after the warm-up, try one unassisted chin-up from an active hang. If it works early, film it and keep following the plan.
 - Optional in weeks 10-12: add a few palms-away negatives if you want a head start on the pull-up later — not needed for the chin-up goal.
 
+## Travel — Hotel + Bands Only, No Gym
+No pull-up bar, so negatives, the active hang, and the chin-over-bar hold aren't directly doable — the substitutes below keep the same pulling pattern using band tension instead of bodyweight/gravity. Anchor the band high on a door (an over-the-door anchor, or looped over the top of a closed, sturdy door) for pulldown and scap-pull moves, and at chest height for rows. Same day structure (Negatives / Assisted Reps / Holds and Rows) and the same warm-up/cool-down — only the main lifts swap. If you're traveling near the Jan 1 test date, push the test back rather than testing off a travel week — see Progression Rules above for how reassessment works. Use this for any session that falls on a travel day, regardless of which phase you're in — the band thickness and tempo notes from that day's normal version still apply.
+
+## Travel Exercise Swaps
+| Normal Exercise | Band-Only Substitute | Sets x Reps | How |
+|---|---|---|---|
+| Chin-Up Negatives | Band Pulldown, kneeling, slow release | 4x8-10 | Anchor band high on door, pull to chest, control the release back up over 3-5 sec — same slow-lowering emphasis as the real negative |
+| TRX Rows | Standing Band Row | 3x10-12 | Anchor band at chest height, step back for tension, row elbows past your ribs |
+| Scap Pulls, palms away | Band Scap Pulls | 3x6-8 | Anchor band high overhead, arms straight, pull shoulder blades down without bending the elbows |
+| Hollow Hold | Hollow Hold | 3x20 sec | Unchanged — no equipment needed |
+| Band-Assisted Chin-Ups | Heavy Band Pulldown | 4x8-10 | Thickest or doubled band, same kneeling pulldown as above, focus on full range and control |
+| Dumbbell Row | Standing Band Row | 3x10-12 | Same movement as the TRX row substitute above, use a heavier band |
+| Lat Pulldown (palms toward you) | Band Pulldown, underhand grip | 3x10-12 | Anchor high, palms toward you to match the chin-up grip |
+| Band Face Pulls | Band Face Pulls | 3x12-15 | Unchanged — already band-based |
+| Chin-Over-Bar Hold | Band Pulldown, hold at bottom | 4x15-20 sec | Pull to chest and hold the squeeze — mimics the isometric top-of-chin-up position |
+| Active Hang, palms away | Band Pulldown, paused reps | 3x12-15 | No bar to hang from — higher-rep paused pulldowns substitute for the same time-under-tension |
+| Dumbbell Curls | Band Curls | 2x10-12 | Step on the band, curl, lower slowly |
+
 ## Test Day (Jan 1)
 - Rest Dec 28 - Dec 31 — no pulling work.
 - Do the usual warm-up, then up to 3 attempts with 2-3 minutes between them.
